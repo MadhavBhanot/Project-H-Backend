@@ -41,34 +41,46 @@ node index.js
 
 ### 1. Create Schemas
 
-- [ ] Design and implement Mongoose schema for **User**:
-  - [ ] `name`
-  - [ ] `username`
-  - [ ] `email`
-  - [ ] `password`
-  - [ ] `phoneNumber`
-  - [ ] `profileImage`
-  - [ ] `followers`
-  - [ ] `following`
-  - [ ] `posts`
-  - [ ] `savedPosts`
-  - [ ] `likedPosts`
-  - [ ] `preferences`
-  - [ ] `isVerified`
-  - [ ] `savedJobs`
-  - [ ] `appliedJobs`
+- [x] Design and implement Mongoose schema for **User**:
+  - [x] `name`
+  - [x] `username`
+  - [x] `email`
+  - [x] `password`
+  - [x] `phoneNumber`
+  - [x] `profileImage`
+  - [x] `followers`
+  - [x] `following`
+  - [x] `posts`
+  - [x] `savedPosts`
+  - [x] `likedPosts`
+  - [x] `preferences`
+  - [x] `isVerified`
+  - [x] `savedJobs`
+  - [x] `appliedJobs`
 - [ ] Design and implement Mongoose schema for **Post**:
   - [ ] `image`
   - [ ] `caption`
   - [ ] `likes`
   - [ ] `comments`
   - [ ] `author`
+  - [ ] `createdAt`
 - [ ] Design and implement Mongoose schema for **Job**:
   - [ ] `postedBy`
   - [ ] `description`
   - [ ] `minReq`
   - [ ] `imageURL`
   - [ ] `applicants`
+  - [ ] `status`
+  - [ ] `createdAt`
+  - [ ] `updatedAt`
+- [ ] Design and implement Mongoose schema for **Comment**:
+  - [ ] `content`
+  - [ ] `authorId`
+  - [ ] `postId`
+  - [ ] `parentComment`
+  - [ ] `replies`
+  - [ ] `createdAt`
+  - [ ] `updatedAt`
 
 ---
 
