@@ -76,8 +76,8 @@ node index.js
 
 #### User Routes
 
-- [ ] `POST /users/register` - Register a new user.
-- [ ] `POST /users/login` - Authenticate and log in a user.
+- [ ] `POST /auth/register` - Register a new user.
+- [ ] `POST /auth/login` - Authenticate and log in a user.
 - [ ] `GET /users/:id` - Get user details by ID.
 - [ ] `PUT /users/:id` - Update user profile.
 - [ ] `DELETE /users/:id` - Delete a user.
