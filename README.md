@@ -57,6 +57,8 @@ node index.js
   - [x] `isVerified`
   - [x] `savedJobs`
   - [x] `appliedJobs`
+  - [x] `oauthProvider`
+  - [x] `oauthProviderId`
 - [ ] Design and implement Mongoose schema for **Post**:
   - [ ] `image`
   - [ ] `caption`
