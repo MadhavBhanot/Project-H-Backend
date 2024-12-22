@@ -94,6 +94,14 @@ const User = new mongoose.Schema(
         default: 'active',
       },
     },
+    oauthProvider: {
+      type: String, // e.g., 'google', 'github'
+      enum: ['google', 'github'],
+    },
+    oauthProviderId: {
+      type: String,
+      unique: true, // Unique ID from the OAuth provider (e.g., Google ID)
+    },
   },
   {
     timestamps: true,
