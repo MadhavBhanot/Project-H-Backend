@@ -114,10 +114,12 @@ node index.js
 
 - [ ] Test all the routes using **Postman** or similar API testing tools.
 
+---
+
 ## Connection String
 
-**Drivers**: mongodb+srv://shivamkumardev01:<db_password>@cluster0.jlqeh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-**Compass**: mongodb+srv://shivamkumardev01:<db_password>@cluster0.jlqeh.mongodb.net/
-**Shell**: mongosh "mongodb+srv://cluster0.jlqeh.mongodb.net/" --apiVersion 1 --username shivamkumardev01
-**VS Code**: mongodb+srv://shivamkumardev01:<db_password>@cluster0.jlqeh.mongodb.net/
-**db_password**: xQgmrdgq0Hsxx6Mu
+- **Drivers**: mongodb+srv://shivamkumardev01:<db_password>@cluster0.jlqeh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+- **Compass**: mongodb+srv://shivamkumardev01:<db_password>@cluster0.jlqeh.mongodb.net/
+- **Shell**: mongosh "mongodb+srv://cluster0.jlqeh.mongodb.net/" --apiVersion 1 --username shivamkumardev01
+- **VS Code**: mongodb+srv://shivamkumardev01:<db_password>@cluster0.jlqeh.mongodb.net/
+- **db_password**: xQgmrdgq0Hsxx6Mu
