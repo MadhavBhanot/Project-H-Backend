@@ -75,14 +75,14 @@ node index.js
   - [ ] `status`
   - [ ] `createdAt`
   - [ ] `updatedAt`
-- [ ] Design and implement Mongoose schema for **Comment**:
-  - [ ] `content`
-  - [ ] `authorId`
-  - [ ] `postId`
-  - [ ] `parentComment`
-  - [ ] `replies`
-  - [ ] `createdAt`
-  - [ ] `updatedAt`
+- [x] Design and implement Mongoose schema for **Comment**:
+  - [x] `content`
+  - [x] `authorId`
+  - [x] `postId`
+  - [x] `parentComment`
+  - [x] `replies`
+  - [x] `createdAt`
+  - [x] `updatedAt`
 
 ---
 
