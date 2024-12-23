@@ -98,3 +98,13 @@ node index.js
 ## Schema Diagram:
 
 <img src="./Project-H-Backend.png" style="border-radius: 8px;"></img>
+
+## Authentication 
+Added user registration functionality with enhanced password validation and OTP email verification.
+
+- Implemented password validation ensuring at least one uppercase, one lowercase, one digit, one special character, and length between 8-20 characters.
+- Integrated OTP generation and email functionality using **nodemailer** to verify user email addresses.
+- Stored OTP temporarily for email verification.
+- Applied **bcrypt** for password hashing.
+- Return appropriate status codes and messages for successful registration or validation errors.
+- Generate JWT Token using **jsonwebtoken** .
