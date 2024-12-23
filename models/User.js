@@ -88,11 +88,6 @@ const User = new mongoose.Schema(
       type: [mongoose.Schema.Types.ObjectId],
       default: [],
       ref: 'Job',
-      status: {
-        type: String,
-        enum: ['active', 'no longer accepting responses'],
-        default: 'active',
-      },
     },
     oauthProvider: {
       type: String, // e.g., 'google', 'github'
