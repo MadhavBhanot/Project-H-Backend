@@ -53,10 +53,14 @@ node index.js
 
 ### 2. Create Routes
 
-#### User Routes
+### Auth Routes
 
 - [ ] `POST /auth/register` - Register a new user.
 - [ ] `POST /auth/login` - Authenticate and log in a user.
+- Send OTP Routes
+
+#### User Routes
+
 - [ ] `GET /users/:id` - Get user details by ID.
 - [ ] `PUT /users/:id` - Update user profile.
 - [ ] `DELETE /users/:id` - Delete a user.
