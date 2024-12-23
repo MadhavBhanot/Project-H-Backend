@@ -39,7 +39,7 @@ node index.js
 
 ## Tasks
 
-### 1. Create Schemas
+### ✅ 1. Create Schemas
 
 - [x] Design and implement Mongoose schema for **User**:
 
