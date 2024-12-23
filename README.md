@@ -42,47 +42,12 @@ node index.js
 ### 1. Create Schemas
 
 - [x] Design and implement Mongoose schema for **User**:
-  - [x] `name`
-  - [x] `username`
-  - [x] `email`
-  - [x] `password`
-  - [x] `phoneNumber`
-  - [x] `profileImage`
-  - [x] `followers`
-  - [x] `following`
-  - [x] `posts`
-  - [x] `savedPosts`
-  - [x] `likedPosts`
-  - [x] `preferences`
-  - [x] `isVerified`
-  - [x] `savedJobs`
-  - [x] `appliedJobs`
-  - [x] `oauthProvider`
-  - [x] `oauthProviderId`
-- [ ] Design and implement Mongoose schema for **Post**:
-  - [ ] `image`
-  - [ ] `caption`
-  - [ ] `likes`
-  - [ ] `comments`
-  - [ ] `author`
-  - [ ] `createdAt`
-- [ ] Design and implement Mongoose schema for **Job**:
-  - [ ] `postedBy`
-  - [ ] `description`
-  - [ ] `minReq`
-  - [ ] `imageURL`
-  - [ ] `applicants`
-  - [ ] `status`
-  - [ ] `createdAt`
-  - [ ] `updatedAt`
+
+- [x] Design and implement Mongoose schema for **Post**:
+
+- [x] Design and implement Mongoose schema for **Job**:
+
 - [x] Design and implement Mongoose schema for **Comment**:
-  - [x] `content`
-  - [x] `authorId`
-  - [x] `postId`
-  - [x] `parentComment`
-  - [x] `replies`
-  - [x] `createdAt`
-  - [x] `updatedAt`
 
 ---
 
