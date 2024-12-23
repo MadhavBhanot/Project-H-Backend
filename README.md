@@ -102,3 +102,7 @@ node index.js
 ## Schema Diagram:
 
 <img src="./Project-H-Backend.png" style="border-radius: 8px;"></img>
+
+## User Flow:
+
+<img src="./User-Flow.png" style="border-radius: 8px;"></img>
