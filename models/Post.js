@@ -5,44 +5,33 @@ const Schema = mongoose.Schema;
 const PostSchema = new Schema(
   {
     image: {
-      type: String,
-      required: true, // Image URL is required
+      type: String, // No 'required' constraint, optional field
     },
     caption: {
       type: String,
-      required: true, // Caption is required
-      trim: true, // Removes extra spaces
+      required: true,
+      trim: true,
     },
     likes: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'User', // References the User schema
+        ref: 'User',
       },
     ],
     comments: [
       {
-        user: {
-          type: Schema.Types.ObjectId,
-          ref: 'User', // References the User schema
-        },
-        text: {
-          type: String,
-          required: true, // Comment text is required
-        },
-        createdAt: {
-          type: Date,
-          default: Date.now, // Timestamp for when the comment was created
-        },
+        type: Schema.Types.ObjectId,
+        ref: 'Comment', // Reference the Comment schema
       },
     ],
     author: {
       type: Schema.Types.ObjectId,
-      ref: 'User', // References the User schema
+      ref: 'User',
       required: true,
     },
   },
   {
-    timestamps: true, // Adds `createdAt` and `updatedAt` fields automatically
+    timestamps: true,
   }
 );
 
