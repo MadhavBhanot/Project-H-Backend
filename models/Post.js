@@ -1,34 +1,52 @@
-// Post Schema
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const Post = new mongoose.Schema(
+// Define the Post schema
+const PostSchema = new Schema(
   {
     image: {
       type: String,
+      required: true, // Image URL is required
     },
     caption: {
       type: String,
-      required: true,
+      required: true, // Caption is required
+      trim: true, // Removes extra spaces
     },
-    comments: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: 'Comment',
-      default: [],
-    },
-    likes: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: 'User',
-      default: [],
-    },
+    likes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User', // References the User schema
+      },
+    ],
+    comments: [
+      {
+        user: {
+          type: Schema.Types.ObjectId,
+          ref: 'User', // References the User schema
+        },
+        text: {
+          type: String,
+          required: true, // Comment text is required
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now, // Timestamp for when the comment was created
+        },
+      },
+    ],
     author: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      type: Schema.Types.ObjectId,
+      ref: 'User', // References the User schema
       required: true,
     },
   },
   {
-    timestamps: true,
-  },
-)
+    timestamps: true, // Adds `createdAt` and `updatedAt` fields automatically
+  }
+);
 
-module.exports = mongoose.model('Post', Post)
+// Create the Post model
+const Post = mongoose.model('Post', PostSchema);
+
+module.exports = Post;
