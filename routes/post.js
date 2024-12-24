@@ -4,8 +4,8 @@ const router = express.Router()
 
 // Import controllers
 // const createPost = require('../controllers/createPost')
-const getAllPosts = require('../controllers/getAllPosts')
-const getPostById = require('../controllers/getPostById')
+const getAllPosts = require('../controllers/post/getAllPost.js')
+const getPostById = require('../controllers/post/getPostById.js')
 // const updatePost = require('../controllers/updatePost')
 // const deletePost = require('../controllers/deletePost')
 // const likePost = require('../controllers/likePost')
