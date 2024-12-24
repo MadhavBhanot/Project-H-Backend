@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const connectDB = require('./config/configDB')
-const authRoutes = require('./routes/auth')
+const apiRoutes = require('./routes/api')
 
 const app = express()
 
@@ -16,8 +16,8 @@ app.get('/', (req, res) => {
   res.status(200).send('Hello World!')
 })
 
-//Authentication Routes
-app.use('/api/auth',authRoutes)
+//All API Routes
+app.use(apiRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server running on port http://localhost:${PORT}`)
