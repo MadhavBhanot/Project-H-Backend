@@ -57,7 +57,8 @@ node index.js
 
 - [ ] `POST /auth/register` - Register a new user.
 - [ ] `POST /auth/login` - Authenticate and log in a user.
-- Send OTP Routes
+- [ ] `POST /auth/verify-otp` - Otp Verification.
+- [ ] `POST /auth/resent-otp` - Resent Otp
 
 #### User Routes
 
@@ -102,6 +103,10 @@ node index.js
 ## Schema Diagram:
 
 <img src="./Project-H-Backend.png" style="border-radius: 8px;"></img>
+
+## User Flow:
+
+<img src="./User-Flow.png" style="border-radius: 8px;"></img>
 
 ## Authentication 
 Added user registration functionality with enhanced password validation and OTP email verification.
