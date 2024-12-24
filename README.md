@@ -63,7 +63,7 @@ node index.js
 #### User Routes
 
 - [ ] `GET /users/:id` - Get user details by ID.
-- [ ] `PUT /users/:id` - Update user profile.
+- [ ] `PATCH /users/:id` - Update user profile.
 - [ ] `DELETE /users/:id` - Delete a user.
 - [ ] `POST /users/:id/follow-unfollow` - Follow or Unfollow a user.
 - [ ] `GET /users/:id/followers` - Get a user's followers list.
@@ -74,7 +74,7 @@ node index.js
 - [ ] `POST /posts` - Create a new post.
 - [x] `GET /posts` - Get all posts.
 - [x] `GET /posts/:id` - Get a post by ID.
-- [ ] `PUT /posts/:id` - Update a post.
+- [ ] `PATCH /posts/:id` - Update a post.
 - [ ] `DELETE /posts/:id` - Delete a post.
 - [ ] `POST /posts/:id/like-unlike` - Like or Unlike a post.
 - [ ] `POST /posts/:id/comment` - Add a comment to a post.
@@ -85,7 +85,7 @@ node index.js
 - [x] `POST /jobs` - Create a new job posting.
 - [x] `GET /jobs` - Get all job postings.
 - [x] `GET /jobs/:id` - Get a job by ID.
-- [ ] `PUT /jobs/:id` - Update a job posting.
+- [ ] `PATCH /jobs/:id` - Update a job posting.
 - [ ] `DELETE /jobs/:id` - Delete a job posting.
 - [ ] `POST /jobs/:id/apply` - Apply for a job.
 - [ ] `GET /jobs/:id/applicants` - Get a list of applicants for a job.
