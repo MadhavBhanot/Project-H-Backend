@@ -15,7 +15,7 @@ const verifyToken = async (req, res, next) => {
 
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET) // Decode the token
 
-    const user = await User.findOne({ userId: decodedToken.userId }) // Find the user
+    const user = await User.findOne({ _id: decodedToken.userId }) // Find the user
 
     if (!user) {
       return res.status(404).json({ message: 'User not found.' })
