@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const connectDB = require('./config/configDB')
+const apiRoutes = require('./routes/api')
 
 const app = express()
 
@@ -14,6 +15,9 @@ connectDB()
 app.get('/', (req, res) => {
   res.status(200).send('Hello World!')
 })
+
+//All API Routes
+app.use(apiRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server running on port http://localhost:${PORT}`)
