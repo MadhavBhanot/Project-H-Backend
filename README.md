@@ -53,12 +53,12 @@ node index.js
 
 ### 2. Create Routes
 
-### Auth Routes
+### ✅ Auth Routes
 
-- [ ] `POST /auth/register` - Register a new user.
-- [ ] `POST /auth/login` - Authenticate and log in a user.
-- [ ] `POST /auth/verify-otp` - Otp Verification.
-- [ ] `POST /auth/resent-otp` - Resent Otp
+- [x] `POST /auth/register` - Register a new user.
+- [x] `POST /auth/login` - Authenticate and log in a user.
+- [x] `POST /auth/verify-otp` - Otp Verification.
+- [x] `POST /auth/resent-otp` - Resent Otp
 
 #### User Routes
 
@@ -73,8 +73,8 @@ node index.js
 #### Post Routes
 
 - [ ] `POST /posts` - Create a new post.
-- [ ] `GET /posts` - Get all posts.
-- [ ] `GET /posts/:id` - Get a post by ID.
+- [x] `GET /posts` - Get all posts.
+- [x] `GET /posts/:id` - Get a post by ID.
 - [ ] `PUT /posts/:id` - Update a post.
 - [ ] `DELETE /posts/:id` - Delete a post.
 - [ ] `POST /posts/:id/like` - Like a post.
@@ -84,9 +84,9 @@ node index.js
 
 #### Job Routes
 
-- [ ] `POST /jobs` - Create a new job posting.
-- [ ] `GET /jobs` - Get all job postings.
-- [ ] `GET /jobs/:id` - Get a job by ID.
+- [x] `POST /jobs` - Create a new job posting.
+- [x] `GET /jobs` - Get all job postings.
+- [x] `GET /jobs/:id` - Get a job by ID.
 - [ ] `PUT /jobs/:id` - Update a job posting.
 - [ ] `DELETE /jobs/:id` - Delete a job posting.
 - [ ] `POST /jobs/:id/apply` - Apply for a job.
@@ -107,13 +107,3 @@ node index.js
 ## User Flow:
 
 <img src="./User-Flow.png" style="border-radius: 8px;"></img>
-
-## Authentication 
-Added user registration functionality with enhanced password validation and OTP email verification.
-
-- Implemented password validation ensuring at least one uppercase, one lowercase, one digit, one special character, and length between 8-20 characters.
-- Integrated OTP generation and email functionality using **nodemailer** to verify user email addresses.
-- Stored OTP temporarily for email verification.
-- Applied **bcrypt** for password hashing.
-- Return appropriate status codes and messages for successful registration or validation errors.
-- Generate JWT Token using **jsonwebtoken** .
