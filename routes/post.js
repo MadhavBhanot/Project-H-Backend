@@ -12,12 +12,12 @@ const likePost = require('../controllers/likePost')
 const savePost = require('../controllers/savePost')
 
 // Routes for posts
-router.post('/create', createPost) // Create a new post
+// router.post('/create', createPost) // Create a new post
 router.get('/all', getAllPosts) // Get all posts
 router.get('/:id', getPostById) // Get a specific post
-router.put('/update/:id', updatePost) // Update a post
-router.delete('/delete/:id', deletePost) // Delete a post
-router.post('/like/:id', likePost) // Like or unlike a post
-router.post('/save/:id', savePost) // Save a post
+// router.put('/update/:id', updatePost) // Update a post
+// router.delete('/delete/:id', deletePost) // Delete a post
+// router.post('/like/:id', likePost) // Like or unlike a post
+// router.post('/save/:id', savePost) // Save a post
 
 module.exports = router
