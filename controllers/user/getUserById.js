@@ -5,7 +5,6 @@ const User = require('../../models/User');
 const getUserById = async (req, res) => {
   try {
     const { id } = req.params
-    console.log('iiiii',id)
 
     // Check if ID is provided
     if(!id){
