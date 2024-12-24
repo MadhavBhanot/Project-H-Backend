@@ -5,6 +5,12 @@ const User = require('../../models/User');
 const getUserById = async (req, res) => {
   try {
     const { id } = req.params
+    console.log('iiiii',id)
+
+    // Check if ID is provided
+    if(!id){
+      return res.status(404).json({Status:0, Message:"User Id is Requires"})
+    };
     
     const user = await User.findById(id).select('-password'); // Exclude password
     if (!user) return res.status(404).json({ Status: 0, Message: 'User not found' });
