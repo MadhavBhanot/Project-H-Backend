@@ -12,12 +12,12 @@ const PORT = process.env.PORT || 5001
 
 connectDB()
 
+//All API Routes
+app.use(apiRoutes)
+
 app.get('/', (req, res) => {
   res.status(200).send('Hello World!')
 })
-
-//All API Routes
-app.use(apiRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server running on port http://localhost:${PORT}`)
