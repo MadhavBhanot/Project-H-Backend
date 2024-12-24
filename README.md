@@ -92,6 +92,14 @@ node index.js
 - [ ] `POST /jobs/:id/apply` - Apply for a job.
 - [ ] `GET /jobs/:id/applicants` - Get a list of applicants for a job.
 
+#### Comment Routes
+
+- [ ] `GET /comments/:id` - Get a comment by ID.
+- [ ] `PUT /comments/:id` - Update a comment.
+- [ ] `DELETE /comments/:id` - Delete a comment.
+- [ ] `POST /comments/:id/reply` - Reply to a comment.
+- [ ] `GET /comments/:id/replies` - Get all replies for a comment.
+
 ---
 
 ### 3. Test Routes
