@@ -1,19 +1,17 @@
 // All the routes will be imported in here and exported as a single module
 
+const express = require('express')
+const router = express.Router()
 
-const express = require('express');
-const router = express.Router();
-
-
-// Import the auth routes
-const authRoutes = require('../routes/auth');
+// Import all the routes
+const authRoutes = require('../routes/auth')
+const postRoutes = require('../routes/post')
 
 // Use the authentication routes under `/auth`
-router.use('/api/auth', authRoutes);
+router.use('/api/auth', authRoutes)
 
 // You can add other route groups here later, for example:
 // router.use('/users', userRoutes);
-// router.use('/posts', postRoutes);
+router.use('api/posts', postRoutes)
 
-module.exports = router;
-
+module.exports = router
