@@ -3,13 +3,13 @@ const express = require('express')
 const router = express.Router()
 
 // Import controllers
-const createPost = require('../controllers/createPost')
+// const createPost = require('../controllers/createPost')
 const getAllPosts = require('../controllers/getAllPosts')
 const getPostById = require('../controllers/getPostById')
-const updatePost = require('../controllers/updatePost')
-const deletePost = require('../controllers/deletePost')
-const likePost = require('../controllers/likePost')
-const savePost = require('../controllers/savePost')
+// const updatePost = require('../controllers/updatePost')
+// const deletePost = require('../controllers/deletePost')
+// const likePost = require('../controllers/likePost')
+// const savePost = require('../controllers/savePost')
 
 // Routes for posts
 // router.post('/create', createPost) // Create a new post
