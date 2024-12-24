@@ -65,8 +65,7 @@ node index.js
 - [ ] `GET /users/:id` - Get user details by ID.
 - [ ] `PUT /users/:id` - Update user profile.
 - [ ] `DELETE /users/:id` - Delete a user.
-- [ ] `POST /users/:id/follow` - Follow another user.
-- [ ] `POST /users/:id/unfollow` - Unfollow a user.
+- [ ] `POST /users/:id/follow-unfollow` - Follow or Unfollow a user.
 - [ ] `GET /users/:id/followers` - Get a user's followers list.
 - [ ] `GET /users/:id/following` - Get a user's following list.
 
@@ -77,8 +76,7 @@ node index.js
 - [x] `GET /posts/:id` - Get a post by ID.
 - [ ] `PUT /posts/:id` - Update a post.
 - [ ] `DELETE /posts/:id` - Delete a post.
-- [ ] `POST /posts/:id/like` - Like a post.
-- [ ] `POST /posts/:id/unlike` - Unlike a post.
+- [ ] `POST /posts/:id/like-unlike` - Like or Unlike a post.
 - [ ] `POST /posts/:id/comment` - Add a comment to a post.
 - [ ] `GET /posts/:id/comments` - Get all comments for a post.
 
