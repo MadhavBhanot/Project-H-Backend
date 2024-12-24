@@ -57,7 +57,8 @@ node index.js
 
 - [ ] `POST /auth/register` - Register a new user.
 - [ ] `POST /auth/login` - Authenticate and log in a user.
-- Send OTP Routes
+- [ ] `POST /auth/verify-otp` - Otp Verification.
+- [ ] `POST /auth/resent-otp` - Resent Otp
 
 #### User Routes
 
