@@ -65,9 +65,9 @@ node index.js
 - [x] `GET /users/:id` - Get user details by ID.
 - [ ] `PATCH /users/:id` - Update user profile.
 - [x] `DELETE /users/:id` - Delete a user.
-- [ ] `POST /users/:id/follow-unfollow` - Follow or Unfollow a user.
-- [ ] `GET /users/:id/followers` - Get a user's followers list.
-- [ ] `GET /users/:id/following` - Get a user's following list.
+- [x] `POST /users/:id/follow-unfollow` - Follow or Unfollow a user.
+- [x] `GET /users/:id/followers` - Get a user's followers list.
+- [x] `GET /users/:id/following` - Get a user's following list.
 
 #### Post Routes
 
