@@ -60,10 +60,10 @@ node index.js
 - [x] `POST /auth/verify-otp` - Otp Verification.
 - [x] `POST /auth/resent-otp` - Resent Otp
 
-#### User Routes
+#### ✅ User Routes
 
 - [x] `GET /users/:id` - Get user details by ID.
-- [ ] `PATCH /users/:id` - Update user profile.
+- [x] `PATCH /users/:id` - Update user profile.
 - [x] `DELETE /users/:id` - Delete a user.
 - [x] `POST /users/:id/follow-unfollow` - Follow or Unfollow a user.
 - [x] `GET /users/:id/followers` - Get a user's followers list.
