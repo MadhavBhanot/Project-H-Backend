@@ -90,7 +90,7 @@ node index.js
 - [x] `POST /jobs/:id/apply` - Apply for a job.
 - [x] `GET /jobs/:id/applicants` - Get a list of applicants for a job.
 
-#### Comment Routes
+#### ✅ Comment Routes
 
 - [x] `GET /comments/:id` - Get a comment by ID.
 - [x] `PATCH /comments/:id` - Update a comment.
