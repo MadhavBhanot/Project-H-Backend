@@ -53,44 +53,50 @@ node index.js
 
 ### 2. Create Routes
 
-### Auth Routes
+### ✅ Auth Routes
 
-- [ ] `POST /auth/register` - Register a new user.
-- [ ] `POST /auth/login` - Authenticate and log in a user.
-- [ ] `POST /auth/verify-otp` - Otp Verification.
-- [ ] `POST /auth/resent-otp` - Resent Otp
+- [x] `POST /auth/register` - Register a new user.
+- [x] `POST /auth/login` - Authenticate and log in a user.
+- [x] `POST /auth/verify-otp` - Otp Verification.
+- [x] `POST /auth/resent-otp` - Resent Otp
 
 #### User Routes
 
-- [ ] `GET /users/:id` - Get user details by ID.
-- [ ] `PUT /users/:id` - Update user profile.
-- [ ] `DELETE /users/:id` - Delete a user.
-- [ ] `POST /users/:id/follow` - Follow another user.
-- [ ] `POST /users/:id/unfollow` - Unfollow a user.
+- [x] `GET /users/:id` - Get user details by ID.
+- [ ] `PATCH /users/:id` - Update user profile.
+- [x] `DELETE /users/:id` - Delete a user.
+- [ ] `POST /users/:id/follow-unfollow` - Follow or Unfollow a user.
 - [ ] `GET /users/:id/followers` - Get a user's followers list.
 - [ ] `GET /users/:id/following` - Get a user's following list.
 
 #### Post Routes
 
 - [ ] `POST /posts` - Create a new post.
-- [ ] `GET /posts` - Get all posts.
-- [ ] `GET /posts/:id` - Get a post by ID.
-- [ ] `PUT /posts/:id` - Update a post.
+- [x] `GET /posts` - Get all posts.
+- [x] `GET /posts/:id` - Get a post by ID.
+- [ ] `PATCH /posts/:id` - Update a post.
 - [ ] `DELETE /posts/:id` - Delete a post.
-- [ ] `POST /posts/:id/like` - Like a post.
-- [ ] `POST /posts/:id/unlike` - Unlike a post.
+- [ ] `POST /posts/:id/like-unlike` - Like or Unlike a post.
 - [ ] `POST /posts/:id/comment` - Add a comment to a post.
 - [ ] `GET /posts/:id/comments` - Get all comments for a post.
 
 #### Job Routes
 
-- [ ] `POST /jobs` - Create a new job posting.
-- [ ] `GET /jobs` - Get all job postings.
-- [ ] `GET /jobs/:id` - Get a job by ID.
-- [ ] `PUT /jobs/:id` - Update a job posting.
+- [x] `POST /jobs` - Create a new job posting.
+- [x] `GET /jobs` - Get all job postings.
+- [x] `GET /jobs/:id` - Get a job by ID.
+- [ ] `PATCH /jobs/:id` - Update a job posting.
 - [ ] `DELETE /jobs/:id` - Delete a job posting.
 - [ ] `POST /jobs/:id/apply` - Apply for a job.
 - [ ] `GET /jobs/:id/applicants` - Get a list of applicants for a job.
+
+#### Comment Routes
+
+- [ ] `GET /comments/:id` - Get a comment by ID.
+- [ ] `PATCH /comments/:id` - Update a comment.
+- [ ] `DELETE /comments/:id` - Delete a comment.
+- [ ] `POST /comments/:id/reply` - Reply to a comment.
+- [ ] `GET /comments/:id/replies` - Get all replies for a comment.
 
 ---
 
@@ -107,13 +113,3 @@ node index.js
 ## User Flow:
 
 <img src="./User-Flow.png" style="border-radius: 8px;"></img>
-
-## Authentication 
-Added user registration functionality with enhanced password validation and OTP email verification.
-
-- Implemented password validation ensuring at least one uppercase, one lowercase, one digit, one special character, and length between 8-20 characters.
-- Integrated OTP generation and email functionality using **nodemailer** to verify user email addresses.
-- Stored OTP temporarily for email verification.
-- Applied **bcrypt** for password hashing.
-- Return appropriate status codes and messages for successful registration or validation errors.
-- Generate JWT Token using **jsonwebtoken** .
