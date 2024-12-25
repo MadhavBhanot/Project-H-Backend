@@ -22,6 +22,11 @@ const followUnfollowUser = async (req, res) => {
       return res.status(404).json({ Status: 0, Message: 'User not found' });
     }
 
+    // Check if the user is trying to follow itself
+    if (user._id.equals(currentUser._id)) {
+      return res.status(400).json({ Status: 0, Message: 'Cannot follow yourself' });
+    }
+
     // Check if currentUser is already following the user
     if (user.followers.includes(currentUser._id)) {
       // Unfollow the user
