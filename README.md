@@ -80,14 +80,14 @@ node index.js
 - [ ] `POST /posts/:id/comment` - Add a comment to a post.
 - [ ] `GET /posts/:id/comments` - Get all comments for a post.
 
-#### Job Routes
+#### ✅ Job Routes
 
 - [x] `POST /jobs` - Create a new job posting.
 - [x] `GET /jobs` - Get all job postings.
 - [x] `GET /jobs/:id` - Get a job by ID.
 - [x] `PATCH /jobs/:id` - Update a job posting.
 - [x] `DELETE /jobs/:id` - Delete a job posting.
-- [ ] `POST /jobs/:id/apply` - Apply for a job.
+- [x] `POST /jobs/:id/apply` - Apply for a job.
 - [x] `GET /jobs/:id/applicants` - Get a list of applicants for a job.
 
 #### Comment Routes
