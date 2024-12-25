@@ -8,5 +8,4 @@ async function getJobById(req, res) {
     return res.status(200).json({ message: "Job Retrieved Successfully", data })
 }
 
-
 module.exports = getJobById;
