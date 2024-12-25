@@ -92,11 +92,11 @@ node index.js
 
 #### Comment Routes
 
-- [ ] `GET /comments/:id` - Get a comment by ID.
-- [ ] `PATCH /comments/:id` - Update a comment.
-- [ ] `DELETE /comments/:id` - Delete a comment.
-- [ ] `POST /comments/:id/reply` - Reply to a comment.
-- [ ] `GET /comments/:id/replies` - Get all replies for a comment.
+- [x] `GET /comments/:id` - Get a comment by ID.
+- [x] `PATCH /comments/:id` - Update a comment.
+- [x] `DELETE /comments/:id` - Delete a comment.
+- [x] `POST /comments/:id/reply` - Reply to a comment.
+- [x] `GET /comments/:id/replies` - Get all replies for a comment.
 
 ---
 
