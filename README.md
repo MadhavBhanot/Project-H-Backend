@@ -71,12 +71,12 @@ node index.js
 
 #### Post Routes
 
-- [ ] `POST /posts` - Create a new post.
+- [x] `POST /posts` - Create a new post.
 - [x] `GET /posts` - Get all posts.
 - [x] `GET /posts/:id` - Get a post by ID.
-- [ ] `PATCH /posts/:id` - Update a post.
-- [ ] `DELETE /posts/:id` - Delete a post.
-- [ ] `POST /posts/:id/like-unlike` - Like or Unlike a post.
+- [x] `PATCH /posts/:id` - Update a post.
+- [x] `DELETE /posts/:id` - Delete a post.
+- [x] `POST /posts/:id/like-unlike` - Like or Unlike a post.
 - [ ] `POST /posts/:id/comment` - Add a comment to a post.
 - [ ] `GET /posts/:id/comments` - Get all comments for a post.
 
