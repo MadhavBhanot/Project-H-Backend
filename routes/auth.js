@@ -12,14 +12,13 @@ const { default: github } = require('../controllers/auth/github')
 const { forgetPassword } = require('../controllers/auth/forgetPassword')
 const { changePassword } = require('../controllers/auth/changePassword')
 
-
 router.post('/register', register)
 router.post('/verify-otp', verifyOtp)
 router.post('/resent-otp', resendOTP)
 router.post('/login', login)
 router.post('/google', google)
 router.post('/github', github)
-router.post('/forget-password', forgetPassword)
-router.post('/change-password',verifyToken, changePassword)
+router.post('/forgot-password', forgetPassword)
+router.post('/reset-password', verifyToken, changePassword)
 
 module.exports = router
