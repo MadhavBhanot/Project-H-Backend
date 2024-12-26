@@ -13,7 +13,7 @@ async function replyToComment(req, res) {
     const reply = await Comment.create(replyData);
     comment.replies.push(reply._id)
     await comment.save()
-    return res.status(200).json({ message: "Comment Reply Added Successfully" })
+    return res.status(200).json({ message: "Comment Reply Added Successfully", reply })
 }
 
 module.exports = replyToComment;
