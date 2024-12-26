@@ -7,6 +7,7 @@ const authRoutes = require('../routes/auth')
 const postRoutes = require('../routes/post')
 const jobRouter = require('../routes/job')
 const userRoutes = require('../routes/user')
+const commentRoutes = require('../routes/comment')
 
 // Use the authentication routes under `/auth`
 router.use('/api/auth', authRoutes)
@@ -16,5 +17,6 @@ router.use('/api/auth', authRoutes)
 router.use('/api/posts', postRoutes)
 router.use('/api/jobs', jobRouter)
 router.use('/api/users', userRoutes)
+router.use('/api/comments', commentRoutes)
 
 module.exports = router

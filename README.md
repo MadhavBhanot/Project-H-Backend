@@ -60,14 +60,14 @@ node index.js
 - [x] `POST /auth/verify-otp` - Otp Verification.
 - [x] `POST /auth/resent-otp` - Resent Otp
 
-#### User Routes
+#### ✅ User Routes
 
-- [ ] `GET /users/:id` - Get user details by ID.
-- [ ] `PATCH /users/:id` - Update user profile.
-- [ ] `DELETE /users/:id` - Delete a user.
-- [ ] `POST /users/:id/follow-unfollow` - Follow or Unfollow a user.
-- [ ] `GET /users/:id/followers` - Get a user's followers list.
-- [ ] `GET /users/:id/following` - Get a user's following list.
+- [x] `GET /users/:id` - Get user details by ID.
+- [x] `PATCH /users/:id` - Update user profile.
+- [x] `DELETE /users/:id` - Delete a user.
+- [x] `POST /users/:id/follow-unfollow` - Follow or Unfollow a user.
+- [x] `GET /users/:id/followers` - Get a user's followers list.
+- [x] `GET /users/:id/following` - Get a user's following list.
 
 #### Post Routes
 
@@ -80,23 +80,23 @@ node index.js
 - [ ] `POST /posts/:id/comment` - Add a comment to a post.
 - [ ] `GET /posts/:id/comments` - Get all comments for a post.
 
-#### Job Routes
+#### ✅ Job Routes
 
 - [x] `POST /jobs` - Create a new job posting.
 - [x] `GET /jobs` - Get all job postings.
 - [x] `GET /jobs/:id` - Get a job by ID.
-- [ ] `PATCH /jobs/:id` - Update a job posting.
-- [ ] `DELETE /jobs/:id` - Delete a job posting.
-- [ ] `POST /jobs/:id/apply` - Apply for a job.
-- [ ] `GET /jobs/:id/applicants` - Get a list of applicants for a job.
+- [x] `PATCH /jobs/:id` - Update a job posting.
+- [x] `DELETE /jobs/:id` - Delete a job posting.
+- [x] `POST /jobs/:id/apply` - Apply for a job.
+- [x] `GET /jobs/:id/applicants` - Get a list of applicants for a job.
 
-#### Comment Routes
+#### ✅ Comment Routes
 
-- [ ] `GET /comments/:id` - Get a comment by ID.
-- [ ] `PATCH /comments/:id` - Update a comment.
-- [ ] `DELETE /comments/:id` - Delete a comment.
-- [ ] `POST /comments/:id/reply` - Reply to a comment.
-- [ ] `GET /comments/:id/replies` - Get all replies for a comment.
+- [x] `GET /comments/:id` - Get a comment by ID.
+- [x] `PATCH /comments/:id` - Update a comment.
+- [x] `DELETE /comments/:id` - Delete a comment.
+- [x] `POST /comments/:id/reply` - Reply to a comment.
+- [x] `GET /comments/:id/replies` - Get all replies for a comment.
 
 ---
 

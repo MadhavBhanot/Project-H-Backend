@@ -93,7 +93,9 @@ const User = new mongoose.Schema(
     },
     oauthProviderId: {
       type: String,
-      unique: true, // Unique ID from the OAuth provider (e.g., Google ID)
+      // unique: true, // Unique ID from the OAuth provider (e.g., Google ID)
+      default: null,
+      unique: false,
     },
   },
   {
