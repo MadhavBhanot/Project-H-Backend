@@ -3,6 +3,8 @@ import Google from './Google'
 import Dashboard from './Dashboard'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import GitHubLogin from './Github'
+import Error from './Error'
 
 function App() {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
@@ -17,8 +19,17 @@ function App() {
     <GoogleOAuthProvider clientId={clientId}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Google />} />
+          <Route
+            path="/"
+            element={
+              <>
+                <Google />
+                <GitHubLogin />
+              </>
+            }
+          />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="*" element={<Error />} />
         </Routes>
       </BrowserRouter>
     </GoogleOAuthProvider>
