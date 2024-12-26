@@ -10,6 +10,11 @@ const otpStorage = require('../../utils/auth/otpStorage');  //Import otpStorage
 const changePassword = async (req, res) => {
     const { email, otp, newPassword } = req.body;
 
+    // Check if all the information came in the request body
+    if(!email || !otp || !newPassword){
+        return res.status(400).json({Status: 0, Message: 'Missing required fields');
+    }
+
     try {
         // Validate OTP
         const storedOTP = otpStorage[email];
