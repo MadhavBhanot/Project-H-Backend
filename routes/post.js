@@ -7,10 +7,11 @@ const verifyToken = require('../middleware/auth/verifyToken.js')
 // const createPost = require('../controllers/createPost')
 const getAllPosts = require('../controllers/post/getAllPost.js')
 const getPostById = require('../controllers/post/getPostById.js')
-const updatePost = require('../controllers/updatePost')
-const deletePost = require('../controllers/deletePost')
-const likePost = require('../controllers/likePost')
-const updatePost = require('../controllers/updatePost')
+const updatePost = require('../controllers/post/updatePost.js')
+const deletePost = require('../controllers/post/deletePost.js')
+const likePost = require('../controllers/post/likeOrUnlikePost.js')
+const updatePost = require('../controllers/post/updatePost.js')
+const addComment = require('../controllers/post/addComment.js')
 // const savePost = require('../controllers/savePost')
 
 // Routes for posts
@@ -22,5 +23,6 @@ router.delete('/delete/:id', verifyToken, deletePost) // Delete a post
 router.post('/like/:id', verifyToken, likePost) // Like or unlike a post
 // router.post('/save/:id', savePost) // Save a post
 router.get('/:id/comments', getAllComment) // Get all comments for a post
+router.post('/:id/comment', addComment) // Add a comment to a post
 
 module.exports = router
