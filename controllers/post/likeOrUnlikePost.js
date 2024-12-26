@@ -28,7 +28,7 @@ const likeOrUnlikePost = async (req, res) => {
         if (post.likes.includes(userId)) {
             // User already liked the post, so unlike it
             post.likes = post.likes.filter((like) => like !== userId);
-            user.likedPosts.push(id);
+            user.likedPosts.pull(id);
 
             await user.save();
             await post.save();
@@ -40,7 +40,7 @@ const likeOrUnlikePost = async (req, res) => {
         } else {
             // User has not liked the post, so like it
             post.likes.push(userId);
-            user.likedPosts.pull(id);
+            user.likedPosts.push(id);
 
             await user.save();
             await post.save();
