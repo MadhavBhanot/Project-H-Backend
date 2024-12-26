@@ -51,7 +51,7 @@ node index.js
 
 ---
 
-### 2. Create Routes
+### 2. ✅ Create Routes
 
 ### ✅ Auth Routes
 
@@ -69,7 +69,7 @@ node index.js
 - [x] `GET /users/:id/followers` - Get a user's followers list.
 - [x] `GET /users/:id/following` - Get a user's following list.
 
-#### Post Routes
+#### ✅ Post Routes
 
 - [x] `POST /posts` - Create a new post.
 - [x] `GET /posts` - Get all posts.
@@ -77,8 +77,8 @@ node index.js
 - [x] `PATCH /posts/:id` - Update a post.
 - [x] `DELETE /posts/:id` - Delete a post.
 - [x] `POST /posts/:id/like-unlike` - Like or Unlike a post.
-- [ ] `POST /posts/:id/comment` - Add a comment to a post.
-- [ ] `GET /posts/:id/comments` - Get all comments for a post.
+- [x] `POST /posts/:id/comment` - Add a comment to a post.
+- [x] `GET /posts/:id/comments` - Get all comments for a post.
 
 #### ✅ Job Routes
 
