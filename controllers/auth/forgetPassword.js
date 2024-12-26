@@ -1,4 +1,4 @@
-// Forget 
+// Forget Password
 
 const crypto = require('crypto'); // For generating OTP
 const User = require('../../models/User');
