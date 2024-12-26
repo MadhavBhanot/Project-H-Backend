@@ -59,6 +59,10 @@ node index.js
 - [x] `POST /auth/login` - Authenticate and log in a user.
 - [x] `POST /auth/verify-otp` - Otp Verification.
 - [x] `POST /auth/resent-otp` - Resent Otp
+- [x] `POST /auth/forgot-password` - Forgot Password
+- [x] `POST /auth/reset-password` - Reset Password
+- [x] `POST /auth/google` - Google OAuth
+- [x] `POST /auth/github` - Github OAuth
 
 #### ✅ User Routes
 
