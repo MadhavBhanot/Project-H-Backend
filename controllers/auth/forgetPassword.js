@@ -10,6 +10,11 @@ const otpStorage = require('../../utils/auth/otpStorage');  //Import otpStorage
 // Forget Password - Send OTP to Email
 const forgetPassword = async (req, res) => {
     const { email } = req.body;
+
+    // Vaildate request body
+    if(!email){
+         return res.status(404).json({ Status: 0, Message: 'Email not found' });
+    }
     
     try {
         // Check if user exists
