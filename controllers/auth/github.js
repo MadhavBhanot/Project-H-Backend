@@ -1,7 +1,7 @@
-import axios from 'axios'
-import User from '../../models/User.js' // Your user model for MongoDB
-import jwt from 'jsonwebtoken'
-import bcrypt from 'bcrypt'
+const axios = require('axios')
+const jwt = require('jsonwebtoken')
+const User = require('../../models/User.js')
+const bcrypt = require('bcryptjs')
 
 const github = async (req, res) => {
   console.log('Hit')
@@ -126,4 +126,4 @@ const github = async (req, res) => {
   }
 }
 
-export default github
+module.exports = github
