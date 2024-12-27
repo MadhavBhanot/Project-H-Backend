@@ -14,9 +14,8 @@ connectDB()
 
 //All API Routes
 app.use(apiRoutes)
-
-app.get('/', (req, res) => {
-  res.status(200).send('Hello World!')
+app.all('*', (req, res) => {
+  res.status(404).json({ message: `${req.originalUrl} is not found on this server` })
 })
 
 app.listen(PORT, () => {
