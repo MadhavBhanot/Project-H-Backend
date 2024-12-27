@@ -1,7 +1,7 @@
-import axios from 'axios'
-import jwt from 'jsonwebtoken'
-import User from '../../models/User.js' // Adjust the path based on your project structure
-import bcrypt from 'bcryptjs'
+const axios = require('axios')
+const jwt = require('jsonwebtoken')
+const User = require('../../models/User.js')
+const bcrypt = require('bcryptjs')
 
 const google = async (req, res) => {
   console.log('Hit')
@@ -92,4 +92,4 @@ const google = async (req, res) => {
   }
 }
 
-export default google
+module.exports = google
