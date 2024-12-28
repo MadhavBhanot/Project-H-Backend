@@ -3,6 +3,7 @@ const express = require('express')
 const router = express.Router()
 const verifyToken = require('../middleware/auth/verifyToken.js')
 const checkObjectID = require('../middleware/main/checkObjectID')
+const upload = require('../utils/main/imageUploading');
 // Import controllers
 
 const getAllPosts = require('../controllers/post/getAllPost.js')
@@ -16,7 +17,7 @@ const createPost = require('../controllers/post/createPost.js')
 const getAllComment = require('../controllers/post/getAllComment.js')
 
 // Routes for posts
-router.post('/create', verifyToken, createPost) // Create a new post
+router.post('/create', verifyToken, upload.single('image'), createPost) // Create a new post
 router.get('/all', getAllPosts) // Get all posts
 router.get('/:id', checkObjectID, getPostById) // Get a specific post
 router.patch('/update/:id', verifyToken, checkObjectID, updatePost) // Update a post
