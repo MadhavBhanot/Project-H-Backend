@@ -1,38 +1,56 @@
 // Create a post
-const Post = require('../../models/Post');
+const Post = require('../../models/Post')
 
 const createPost = async (req, res) => {
-    try {
-        const { caption } = req.body;
+// <<<<<<< main
+//     try {
+//         const { caption } = req.body;
 
-        if (!caption) {
-            return res.status(400).json({
-                success: false,
-                message: "Missing Required Fields.",
-            });
-        }
+//         if (!caption) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Missing Required Fields.",
+//             });
+//         }
 
-        const newPost = new Post({
-            image: req.file?.filename || null,
-            caption: caption,
-            author: req.user.userId, // Assign the post to the authenticated user
-        });
+//         const newPost = new Post({
+//             image: req.file?.filename || null,
+//             caption: caption,
+//             author: req.user.userId, // Assign the post to the authenticated user
+//         });
+// =======
+//   try {
+//     const { image, caption } = req.body
 
-        const savedPost = await newPost.save();
+//     if (!caption) {
+//       return res.status(400).json({
+//         success: false,
+//         message: 'Missing Required Fields.',
+//       })
+//     }
 
-        res.status(201).json({
-            success: true,
-            message: "Post created successfully.",
-            data: savedPost,
-        });
-    } catch (error) {
-        console.error('Error in createPost:', error);
-        res.status(500).json({
-            success: false,
-            message: "An error occurred while creating the post.",
-            error: error.message,
-        });
-    }
-};
+//     const newPost = new Post({
+//       image,
+//       caption,
+//       author: req.user.userId, // Assign the post to the authenticated user
+//     })
+// >>>>>>> main
 
-module.exports = createPost;
+    const savedPost = await newPost.save()
+
+    res.status(201).json({
+      success: true,
+      message: 'Post created successfully.',
+      data: savedPost,
+    })
+  } catch (error) {
+    console.error('Error in createPost:', error)
+    res.status(500).json({
+      success: false,
+      message: 'An error occurred while creating the post.',
+      error: error.message,
+    })
+  }
+}
+
+module.exports = createPost
