@@ -12,7 +12,7 @@ async function createJob(req, res) {
         description: req.body.description,
         minReq: req.body.minReq,
         category: req.body.category,
-        imageURL: req.body.imageURL || null,
+        imageURL: req.file?.filename || null,
     };
     const job = await createJobHelper(data);
     await addPostedJob(req.user.userId, job._id)

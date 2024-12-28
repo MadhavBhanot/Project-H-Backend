@@ -3,9 +3,9 @@ const Post = require('../../models/Post');
 
 const createPost = async (req, res) => {
     try {
-        const { image, caption } = req.body;
+        const { caption } = req.body;
 
-        if (caption) {
+        if (!caption) {
             return res.status(400).json({
                 success: false,
                 message: "Missing Required Fields.",
@@ -13,9 +13,9 @@ const createPost = async (req, res) => {
         }
 
         const newPost = new Post({
-            image,
-            caption,
-            user: req.user.userId, // Assign the post to the authenticated user
+            image: req.file?.filename || null,
+            caption: caption,
+            author: req.user.userId, // Assign the post to the authenticated user
         });
 
         const savedPost = await newPost.save();

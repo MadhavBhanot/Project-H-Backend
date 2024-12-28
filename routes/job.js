@@ -3,8 +3,9 @@ const express = require('express');
 const jobRouter = express.Router();
 const verifyToken = require('../middleware/auth/verifyToken')
 const checkObjectID = require('../middleware/main/checkObjectID')
+const upload = require('../utils/main/imageUploading');
 
-jobRouter.post('/create-job', verifyToken, require('../controllers/job/createJob'));
+jobRouter.post('/create-job', verifyToken, upload.single('imageURL'), require('../controllers/job/createJob'));
 jobRouter.get('/', verifyToken, require('../controllers/job/getAllJob'));
 jobRouter.get('/:id', verifyToken, checkObjectID, require('../controllers/job/getJobById'));
 jobRouter.delete('/:id', verifyToken, checkObjectID, require('../controllers/job/deleteJob'));
