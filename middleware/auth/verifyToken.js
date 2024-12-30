@@ -1,5 +1,5 @@
 const User = require('../../models/User.js')
-const jwt = require('jsonwebtoken')
+const JWT = require('../../config/configJWT.js')
 
 const verifyToken = async (req, res, next) => {
   try {
@@ -13,7 +13,7 @@ const verifyToken = async (req, res, next) => {
 
     const token = authHeader.split(' ')[1]
 
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET) // Decode the token
+    const decodedToken = JWT.verifyToken(token) // Decode the token
 
     const user = await User.findOne({ _id: decodedToken.userId }) // Find the user
 

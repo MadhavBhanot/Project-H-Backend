@@ -12,10 +12,10 @@ const forgetPassword = async (req, res) => {
     const { email } = req.body;
 
     // Vaildate request body
-    if(!email){
-         return res.status(404).json({ Status: 0, Message: 'Email not found' });
+    if (!email) {
+        return res.status(404).json({ Status: 0, Message: 'Email not found' });
     }
-    
+
     try {
         // Check if user exists
         const user = await User.findOne({ email });
@@ -38,6 +38,4 @@ const forgetPassword = async (req, res) => {
     }
 };
 
-module.exports = {
-    forgetPassword
-}
+module.exports = forgetPassword

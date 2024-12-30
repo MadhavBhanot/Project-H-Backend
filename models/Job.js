@@ -1,5 +1,5 @@
-// Job Schema
 const mongoose = require('mongoose')
+
 const jobSchema = new mongoose.Schema(
   {
     postedBy: {
@@ -33,9 +33,6 @@ const jobSchema = new mongoose.Schema(
     },
   },
   { timestamps: true },
-) // Adds createdAt and updatedAt timestamps automatically
+)
 
-// Create Job Model
-const Job = mongoose.model('Job', jobSchema)
-
-module.exports = Job
+module.exports = mongoose.model('Job', jobSchema)

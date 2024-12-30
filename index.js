@@ -20,11 +20,14 @@ const limiter = rateLimit({
 app.use(helmet())
 app.use(cors())
 app.use(limiter)
+
 // Request Body Middleware
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
+
 // Logging Middleware
 app.use(logger); // Logging Requests To Access Log
+
 // Images Middleware
 app.use(express.static(path.resolve('./public')));
 
