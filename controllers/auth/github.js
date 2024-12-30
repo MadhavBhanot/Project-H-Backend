@@ -97,7 +97,7 @@ const github = async (req, res) => {
     // Step 4: Generate JWT token
     const token = jwt.sign(
       { userId: user._id, email: user.email },
-      process.env.JWT_SECRET,
+      process.env.JWT_ACCESS_SECRET,
       { expiresIn: '3d' },
     )
 
