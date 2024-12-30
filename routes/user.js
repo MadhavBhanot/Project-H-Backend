@@ -1,26 +1,17 @@
-// All the user routes
 const express = require('express');
-const router = express.Router();
+const userRouter = express.Router();
 const verifyToken = require('../middleware/auth/verifyToken');
 const checkObjectID = require('../middleware/main/checkObjectID')
 
-// Import Controller 
-const { getUserById } = require('../controllers/user/getUserById');
-const { deleteUser } = require('../controllers/user/deleteUser');
-const { followUnfollowUser } = require('../controllers/user/followOrUnfollowUser');
-const { getFollowers } = require('../controllers/user/getFollowerList');
-const { getFollowing } = require('../controllers/user/getFollowingList');
-const { updateUserProfile } = require('../controllers/user/updateUser')
+// protected and needs checking id 
+userRouter.use(verifyToken)
+userRouter.use(checkObjectID)
 
-// Routes for Users
-router.get('/:id', verifyToken, checkObjectID, getUserById); // Get User by Id
-router.delete('/:id', verifyToken, checkObjectID, deleteUser); // Delete User
-router.post('/:id/follow-unfollow', verifyToken, checkObjectID, followUnfollowUser) // Follow or Unfllow a User
-router.get('/:id/followers', verifyToken, checkObjectID, getFollowers) // Get User's Follwers List
-router.get('/:id/following', verifyToken, checkObjectID, getFollowing) // Get User's Following List
-router.patch('/:id', verifyToken, checkObjectID, updateUserProfile) // Update User's Profile
+userRouter.get('/:id', require('../controllers/user/getUserById')); // Get User by Id
+userRouter.delete('/:id', require('../controllers/user/deleteUser')); // Delete User
+userRouter.post('/:id/follow-unfollow', require('../controllers/user/followOrUnfollowUser')) // Follow or Unfllow a User
+userRouter.get('/:id/followers', require('../controllers/user/getFollowerList')) // Get User's Follwers List
+userRouter.get('/:id/following', require('../controllers/user/getFollowingList')) // Get User's Following List
+userRouter.patch('/:id', require('../controllers/user/updateUser')) // Update User's Profile
 
-
-module.exports = router;
-
-
+module.exports = userRouter;

@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-// Define the Post schema
-const PostSchema = new Schema(
+const PostSchema = new mongoose.Schema(
   {
     image: {
       type: String, // No 'required' constraint, optional field
@@ -14,18 +12,18 @@ const PostSchema = new Schema(
     },
     likes: [
       {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
       },
     ],
     comments: [
       {
-        type: Schema.Types.ObjectId,
-        ref: 'Comment', // Reference the Comment schema
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Comment', // Reference the Comment Schema
       },
     ],
     author: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
@@ -35,7 +33,4 @@ const PostSchema = new Schema(
   }
 );
 
-// Create the Post model
-const Post = mongoose.model('Post', PostSchema);
-
-module.exports = Post;
+module.exports = mongoose.model('Post', PostSchema)
