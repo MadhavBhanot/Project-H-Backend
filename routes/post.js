@@ -1,29 +1,24 @@
-// All the post routes
 const express = require('express')
-const router = express.Router()
+const postRouter = express.Router()
 const verifyToken = require('../middleware/auth/verifyToken.js')
+const checkObjectID = require('../middleware/main/checkObjectID')
+const upload = require('../utils/main/imageUploading');
 
-// Import controllers
+// Unprotected routes
+postRouter.get('/all', require('../controllers/post/getAllPost.js')) // Get all posts
+postRouter.get('/:id', checkObjectID, require('../controllers/post/getPostById.js')) // Get a specific post
 
-const getAllPosts = require('../controllers/post/getAllPost.js')
-const getPostById = require('../controllers/post/getPostById.js')
-const updatePost = require('../controllers/post/updatePost.js')
-const deletePost = require('../controllers/post/deletePost.js')
-const likePost = require('../controllers/post/likeOrUnlikePost.js')
-const addComment = require('../controllers/post/addComment.js')
-const savePost = require('../controllers/post/savePost.js')
-const createPost = require('../controllers/post/createPost.js')
-const getAllComment = require('../controllers/post/getAllComment.js')
+// Protected routes
+postRouter.use(verifyToken)
+postRouter.post('/create', upload.single('image'), require('../controllers/post/createPost.js')) // Create a new post
 
-// Routes for posts
-router.post('/create', verifyToken, createPost) // Create a new post
-router.get('/all', getAllPosts) // Get all posts
-router.get('/:id', getPostById) // Get a specific post
-router.patch('/update/:id', verifyToken, updatePost) // Update a post
-router.delete('/delete/:id', verifyToken, deletePost) // Delete a post
-router.post('/like/:id', verifyToken, likePost) // Like or unlike a post
-router.post('/save/:id', savePost) // Save a post
-router.get('/comments/:id', getAllComment) // Get all comments for a post
-router.post('/comment/:id', verifyToken, addComment) // Add a comment to a post
+// Checking ID in query paramaters
+postRouter.use(checkObjectID)
+postRouter.patch('/update/:id', require('../controllers/post/updatePost.js')) // Update a post
+postRouter.delete('/delete/:id', require('../controllers/post/deletePost.js')) // Delete a post
+postRouter.post('/like/:id', require('../controllers/post/likeOrUnlikePost.js')) // Like or unlike a post
+postRouter.post('/save/:id', require('../controllers/post/savePost.js')) // Save a post
+postRouter.get('/comments/:id', require('../controllers/post/getAllComment.js')) // Get all comments for a post
+postRouter.post('/comment/:id', require('../controllers/post/addComment.js')) // Add a comment to a post
 
-module.exports = router
+module.exports = postRouter

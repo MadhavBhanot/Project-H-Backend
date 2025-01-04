@@ -11,8 +11,8 @@ const changePassword = async (req, res) => {
     const { email, otp, newPassword } = req.body;
 
     // Check if all the information came in the request body
-    if(!email || !otp || !newPassword){
-        return res.status(400).json({Status: 0, Message: 'Missing required fields');
+    if (!email || !otp || !newPassword) {
+        return res.status(400).json({ Status: 0, Message: 'Missing required fields' });
     }
 
     try {
@@ -52,6 +52,4 @@ const changePassword = async (req, res) => {
 };
 
 
-module.exports = {
-    changePassword
-}
+module.exports = changePassword

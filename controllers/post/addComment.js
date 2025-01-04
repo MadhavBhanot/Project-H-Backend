@@ -1,4 +1,5 @@
 const Post = require('../../models/Post')
+const Comment = require('../../models/Comment')
 
 const addComment = async (req, res) => {
   const { id } = req.params
@@ -20,7 +21,7 @@ const addComment = async (req, res) => {
     const comment = new Comment({
       content,
       authorId: req.user.userId,
-      postID: id,
+      postId: id,
     })
 
     await comment.save()
