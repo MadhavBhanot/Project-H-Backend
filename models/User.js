@@ -37,56 +37,54 @@ const User = new mongoose.Schema(
       type: Array,
       default: [],
     },
-    followers: {
-      type: [mongoose.Schema.Types.ObjectId],
-      default: [],
-      ref: 'User',
-    },
-    following: {
-      type: [mongoose.Schema.Types.ObjectId],
-      default: [],
-      ref: 'User',
-    },
-    posts: {
-      type: [mongoose.Schema.Types.ObjectId],
-      default: [],
-      ref: 'Post',
-    },
-    savedPosts: {
-      type: [mongoose.Schema.Types.ObjectId],
-      default: [],
-      ref: 'Post',
-    },
-    likedPosts: {
-      type: [mongoose.Schema.Types.ObjectId],
-      default: [],
-      ref: 'Post',
-    },
-    savedJobs: {
-      type: [mongoose.Schema.Types.ObjectId],
-      default: [],
-      ref: 'Job',
-    },
-    appliedJobs: {
-      type: [mongoose.Schema.Types.ObjectId],
-      default: [],
-      ref: 'Job',
-      status: {
-        type: String,
-        enum: [
-          'pending',
-          'accepted',
-          'rejected',
-          'no longer accepting responses',
-        ],
-        default: 'pending',
+    followers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
       },
-    },
-    postedJobs: {
-      type: [mongoose.Schema.Types.ObjectId],
-      default: [],
-      ref: 'Job',
-    },
+    ],
+    following: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+    posts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Post',
+      },
+    ],
+    savedPosts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Post',
+      },
+    ],
+    likedPosts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Post',
+      },
+    ],
+    savedJobs: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Job',
+      },
+    ],
+    appliedJobs: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Job',
+      },
+    ],
+    postedJobs: [
+      {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Job',
+      },
+    ],
     oauthProvider: {
       type: String, // e.g., 'google', 'github'
       enum: ['google', 'github'],

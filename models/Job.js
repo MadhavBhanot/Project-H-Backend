@@ -20,6 +20,16 @@ const jobSchema = new mongoose.Schema(
       type: String,
       default: null, // Optional field
     },
+    status: {
+      type: String,
+      enum: [
+        'pending',
+        'accepted',
+        'rejected',
+        'no longer accepting responses',
+      ],
+      default: 'pending',
+    },
     applicants: [
       {
         type: mongoose.Schema.Types.ObjectId, // Reference to Users who applied
