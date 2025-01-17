@@ -3,9 +3,17 @@ const mongoose = require('mongoose')
 
 const User = new mongoose.Schema(
   {
-    name: {
+    clerkId:{
       type: String,
-      required: true,
+      required:true
+    },
+    firstName: {
+      type: String,
+      required: false
+    },
+    lastName:{
+      type: String,
+      required: false
     },
     username: {
       type: String,
@@ -19,12 +27,12 @@ const User = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      // required: true,
     },
     phoneNumber: {
       type: String,
-      required: true,
-      unique: true,
+      required: false,
+      default: null
     },
     profileImg: {
       type: String,
