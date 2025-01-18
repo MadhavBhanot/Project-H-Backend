@@ -1,4 +1,4 @@
-const { clerkClient } = require('@clerk/clerk-sdk-node');
+const { clerkClient } = require('@clerk/express');
 const { Webhook } = require('svix');
 const User = require('../../models/User');
 require('dotenv').config();

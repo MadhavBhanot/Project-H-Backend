@@ -43,6 +43,7 @@ connectDB()
 
 //All API Routes
 app.use(apiRoutes)
+
 // Clerk Webhook middleware 
 app.use(webhookHandler);
 
