@@ -53,14 +53,14 @@ const webhookHandler = async (req, res) => {
   try {
     // Handle the user.created event
     if (eventType === 'user.created') {
-      const { id, email_addresses, first_name, last_name, username, password,phone_numbers } = eventData;
+      const { id, email_addresses, first_name, last_name, username, password } = eventData;
       const userData = {
         clerkId: id,
         email: email_addresses[0].email_address,
         username: username || "",
         firstName: first_name || "",
         lastName: last_name || "",
-        phoneNumber: phone_numbers[0].phone_number || null,
+        // phoneNumber: phone_numbers[0].phone_number || null,
         password: password || null  // Set password to null if it's not available
       };
   
@@ -83,7 +83,7 @@ const webhookHandler = async (req, res) => {
 
     // Handle the user.updated event
     if (eventType === 'user.updated') {
-      const { id, email_addresses, first_name, last_name, username, phone_numbers } = eventData;
+      const { id, email_addresses, first_name, last_name, username } = eventData;
 
       // Find the user in MongoDB by their Clerk ID and update their details
       const updatedUser = await User.findOneAndUpdate(
@@ -93,7 +93,7 @@ const webhookHandler = async (req, res) => {
           username: username || "",
           firstName: first_name || "",
           lastName: last_name || "",
-          phoneNumber: phone_numbers[0].phone_number
+          // phoneNumber: phone_numbers[0].phone_number
         },
         { new: true } // Return the updated document
       );

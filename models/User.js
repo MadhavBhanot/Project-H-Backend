@@ -29,11 +29,11 @@ const User = new mongoose.Schema(
       type: String,
       // required: true,
     },
-    phoneNumber: {
-      type: String,
-      required: false,
-      default: null
-    },
+    // phoneNumber: {
+    //   type: String,
+    //   required: false,
+    //   default: null
+    // },
     profileImg: {
       type: String,
     },

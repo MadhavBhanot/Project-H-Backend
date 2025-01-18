@@ -17,7 +17,7 @@ const updateUser = async (req, res) => {
             firstName,
             lastName,
             emailAddress:[email],
-            phoneNumber:[phoneNumber],
+            // phoneNumber:[phoneNumber],
             username,
         }
     );

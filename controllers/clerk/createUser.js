@@ -11,7 +11,7 @@ const createUser = async (req, res) => {
         firstName,
         lastName,
         emailAddress:[email],
-        phoneNumber:[phoneNumber],
+        // phoneNumber:[phoneNumber],
         username,
         password, // Min 8 Character Required
     });
