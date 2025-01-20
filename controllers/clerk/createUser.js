@@ -18,9 +18,13 @@ const createUser = async (req, res) => {
     console.log('ClerkUser User data', clerkUser)
     // Generate a sign-in token with the Clerk JWT template
     const tokenResponse = await clerkClient.signInTokens.createSignInToken({
-      userId: clerkUser.clerkId, // Clerk user ID from your database
+      userId: clerkUser.id, // Clerk user ID from your database
       expiresInSeconds: 60 * 60 * 24 * 7, // 1 week expiry
     })
+
+    if (!tokenResponse) {
+      return res.status(400).json({ message: 'Failed to create sign-in token' })
+    }
 
     const accessToken = tokenResponse.token
 
