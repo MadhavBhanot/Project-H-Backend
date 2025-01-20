@@ -110,6 +110,57 @@ node index.js
 
 ---
 
+## NGROK server Set Up
+
+- Create an account on [Ngrok](https://ngrok.com/) if you don't have one.
+- Follow the **ngrok** installation guide to install it on your local system.
+- Once installed, run the following command in your terminal to start a tunnel for your local server:
+```bash
+ngrok http 5002(PORT)  // Used **PORT** according to you run your project on which PORT
+
+```
+- This will give you a public URL like (e.g., https://fawn-two-nominally.ngrok-free.app) that can be used to send webhook payloads to your local server.
+
+
+## Set Up Clerk Webhook
+- Log in to your **Clerk Dashboard**.
+- Navigate to the **Configre** page -> **Webhooks** page.
+- click **Add Endpoint**.
+- In the Endpoint URL field, paste the URL from **Ngrok,** followed by **/api/webhooks** like (e.g., https://146f-106-219-121-105.ngrok-free.app/api/webhooks).
+- Under Subscribe to events, select `user.created`, `user.updated` and `user.deleted` (or other events as needed).
+- Copy the Signing Secret and save it to your **.env.local** file, like this:
+```
+SIGNING_SECRET=whsec_1234567890abcdef
+
+```
+### Add Clerk Credential in .env file 
+
+- Navigate to **Clerk Dashboard** -> **Configure** page.
+- Click on **API Key** and Copy the `CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`.
+- And add key in your env file. 
+
+```
+CLERK_PUBLISHABLE_KEY= your_publishable_key
+CLERK_SECRET_KEY= your_api_key
+CLERK_WEBHOOK_SECRET= your_webhook_singing_key
+
+```
+
+### Install Required Packages
+
+Install the necessary dependencies:
+
+```bash
+
+npm install @clerk/express svix
+
+```
+## Package Details
+- **1. @clerk/express** – Clerk SDK to interact with the Clerk API.
+- **2. svix** – Used for **webhook** signature verification.
+
+---
+
 ## Schema Diagram:
 
 <img src="./Project-H-Backend.png" style="border-radius: 8px;"></img>
@@ -117,3 +168,11 @@ node index.js
 ## User Flow:
 
 <img src="./User-Flow.png" style="border-radius: 8px;"></img>
+
+
+
+---
+
+
+
+
