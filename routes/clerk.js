@@ -5,9 +5,10 @@ const { createUser } = require('../controllers/clerk/createUser')
 const { updateUser } = require('../controllers/clerk/updateUser')
 const { deleteUser } = require('../controllers/clerk/deleteUser')
 const { ClerkExpressWithAuth } = require('@clerk/clerk-sdk-node')
+const { verifyClerkToken } = require('../middleware/clerk/verifyToken')
 
-router.use(ClerkExpressWithAuth())
 router.post('/createUser', createUser)
+router.use(verifyClerkToken)
 router.post('/updateUser/:userId', updateUser)
 router.delete('/deleteUser/:userId', deleteUser)
 
