@@ -148,6 +148,10 @@ SIGNING_SECRET=whsec_1234567890abcdef
 ```
 ### Add Clerk Credential in .env file 
 
+- Navigate to **Clerk Dashboard** -> **Configure** page.
+- Click on **API Key** and Copy the `CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`.
+- And add key in your env file. 
+
 ```
 CLERK_PUBLISHABLE_KEY= your_publishable_key
 CLERK_SECRET_KEY= your_api_key
