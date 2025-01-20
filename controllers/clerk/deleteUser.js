@@ -5,8 +5,8 @@ const { clerkClient } = require('@clerk/express')
 const deleteUser = async (req, res) => {
   const { userId } = req.params
 
-  const user = req.auth.user
-  console.log('user', user)
+  // const user = req.auth.user
+  // console.log('user', user)
   try {
     if (!userId) {
       return res.status(404).json({ Status: 0, message: 'User Id not found' })
