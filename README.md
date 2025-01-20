@@ -163,7 +163,7 @@ npm install @clerk/express svix
 
 ```
 ### Package Details
-- **1. @clerk/clerk-sdk-node** – Clerk SDK to interact with the Clerk API.
+- **1. @clerk/express** – Clerk SDK to interact with the Clerk API.
 - **2. svix** – Used for **webhook** signature verification.
 
 
