@@ -1,15 +1,14 @@
-const express = require('express');
-const router = express.Router();
-const { verifyTokenMiddleware } = require('../middleware/clerk/verifyTokenMiddleware');
+const express = require('express')
+const router = express.Router()
 
-const { createUser } = require('../controllers/clerk/createUser');
-const { updateUser } = require('../controllers/clerk/updateUser');
-const { deleteUser } = require('../controllers/clerk/deleteUser');
+const { createUser } = require('../controllers/clerk/createUser')
+const { updateUser } = require('../controllers/clerk/updateUser')
+const { deleteUser } = require('../controllers/clerk/deleteUser')
+const { ClerkExpressWithAuth } = require('@clerk/clerk-sdk-node')
 
+router.use(ClerkExpressWithAuth())
+router.post('/createUser', createUser)
+router.post('/updateUser/:userId', updateUser)
+router.delete('/deleteUser/:userId', deleteUser)
 
-router.post('/createUser', createUser);
-router.post('/updateUser/:userId', updateUser);
-router.delete('/deleteUser/:userId', verifyTokenMiddleware, deleteUser);
-
-
-module.exports = router;
+module.exports = router

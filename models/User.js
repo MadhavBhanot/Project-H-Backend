@@ -3,17 +3,17 @@ const mongoose = require('mongoose')
 
 const User = new mongoose.Schema(
   {
-    clerkId:{
+    clerkId: {
       type: String,
-      required:true
+      required: true,
     },
     firstName: {
       type: String,
-      required: false
+      required: false,
     },
-    lastName:{
+    lastName: {
       type: String,
-      required: false
+      required: false,
     },
     username: {
       type: String,
@@ -102,6 +102,10 @@ const User = new mongoose.Schema(
       // unique: true, // Unique ID from the OAuth provider (e.g., Google ID)
       default: null,
       unique: false,
+    },
+    isPrivateAccount: {
+      type: Boolean,
+      default: false, // Whether the user's account is private
     },
   },
   {
