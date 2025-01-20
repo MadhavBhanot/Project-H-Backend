@@ -119,7 +119,9 @@ node index.js
 <img src="./User-Flow.png" style="border-radius: 8px;"></img>
 
 
+
 ---
+
 
 ## NGROK server Set Up
 
@@ -133,7 +135,7 @@ ngrok http 5002(PORT)  // Used **PORT** according to you run your project on whi
 - This will give you a public URL like (e.g., https://fawn-two-nominally.ngrok-free.app) that can be used to send webhook payloads to your local server.
 
 
-## Step 2: Set Up Clerk Webhook
+## Set Up Clerk Webhook
 - Log in to your **Clerk Dashboard**.
 - Navigate to the **Configre** page -> **Webhooks** page.
 - click **Add Endpoint**.
@@ -162,7 +164,7 @@ Install the necessary dependencies:
 npm install @clerk/express svix
 
 ```
-### Package Details
+## Package Details
 - **1. @clerk/express** – Clerk SDK to interact with the Clerk API.
 - **2. svix** – Used for **webhook** signature verification.
 
