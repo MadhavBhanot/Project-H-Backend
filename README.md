@@ -110,19 +110,6 @@ node index.js
 
 ---
 
-## Schema Diagram:
-
-<img src="./Project-H-Backend.png" style="border-radius: 8px;"></img>
-
-## User Flow:
-
-<img src="./User-Flow.png" style="border-radius: 8px;"></img>
-
-
-
----
-
-
 ## NGROK server Set Up
 
 - Create an account on [Ngrok](https://ngrok.com/) if you don't have one.
@@ -171,6 +158,20 @@ npm install @clerk/express svix
 ## Package Details
 - **1. @clerk/express** – Clerk SDK to interact with the Clerk API.
 - **2. svix** – Used for **webhook** signature verification.
+
+---
+
+## Schema Diagram:
+
+<img src="./Project-H-Backend.png" style="border-radius: 8px;"></img>
+
+## User Flow:
+
+<img src="./User-Flow.png" style="border-radius: 8px;"></img>
+
+
+
+---
 
 
 
