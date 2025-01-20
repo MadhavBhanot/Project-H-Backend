@@ -1,54 +1,51 @@
-const { clerkClient } = require('@clerk/express')
+const { clerkClient } = require('@clerk/clerk-sdk-node')
+const jwt = require('jsonwebtoken')
 
-// Create a new user in Clerk and save the user data in MongoDB
+// Create a new user in Clerk and create a session
 const createUser = async (req, res) => {
-  const { username, email, password, firstName, lastName, phoneNumber } =
-    req.body
+  const { username, email, password, firstName, lastName } = req.body
+
   try {
     // Create a user in Clerk
     const clerkUser = await clerkClient.users.createUser({
       firstName,
       lastName,
       emailAddress: [email],
-      // phoneNumber:[phoneNumber],
       username,
-      password, // Min 8 Character Required
+      password,
     })
 
-    console.log('ClerkUser User data', clerkUser)
-    // Generate a sign-in token with the Clerk JWT template
-    const tokenResponse = await clerkClient.signInTokens.createSignInToken({
-      userId: clerkUser.id, // Clerk user ID from your database
-      expiresInSeconds: 60 * 60 * 24 * 7, // 1 week expiry
-    })
+    // Issue a jwt
+    const jwtToken = jwt.sign(
+      { userId: clerkUser.id },
+      process.env.JWT_SECRET_KEY, // Ensure this is set in your .env file
+      {
+        expiresIn: '100h',
+      },
+    )
 
-    if (!tokenResponse) {
-      return res.status(400).json({ message: 'Failed to create sign-in token' })
-    }
-
-    const accessToken = tokenResponse.token
-
-    console.log('Generated access token:', accessToken)
-
-    // Set the token as an HTTP-only cookie
-    res.cookie('token', accessToken, {
-      httpOnly: true,
-      maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-    })
+    // Log the JWT token to ensure it's being issued properly
+    console.log('JWT Token:', jwtToken)
 
     return res.status(200).json({
-      Status: 1,
-      Message: 'Registration successful',
-      accessToken,
-      clerkUser,
+      status: 'success',
+      message: 'Registration successful',
+      user: {
+        id: clerkUser.id,
+        firstName: clerkUser.firstName,
+        lastName: clerkUser.lastName,
+        email: clerkUser.emailAddresses,
+        username: clerkUser.username,
+      },
+      token: jwtToken,
     })
   } catch (error) {
     console.error('Error creating user:', error)
-    res
-      .status(500)
-      .json({ message: 'Error creating user', error: error.message })
+    res.status(500).json({
+      status: 'error',
+      message: 'Error creating user',
+      error: error.message,
+    })
   }
 }
 

@@ -1,9 +1,20 @@
-// Create a post
+const { clerkClient } = require('@clerk/express')
 const Post = require('../../models/Post')
 
+const jwt = require('jsonwebtoken')
+
 const createPost = async (req, res) => {
-  const user = req.auth
+  console.log(process.env.CLERK_SECRET_KEY)
   try {
+    const userId = req.userId // Gives the User Id
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized: No user ID found.',
+      })
+    }
+
     const { caption } = req.body
 
     if (!caption) {
@@ -15,8 +26,8 @@ const createPost = async (req, res) => {
 
     const newPost = new Post({
       image: req.file?.filename || null,
-      caption: caption,
-      author: req.user.userId, // Assign the post to the authenticated user
+      caption,
+      author: userId,
     })
 
     const savedPost = await newPost.save()
