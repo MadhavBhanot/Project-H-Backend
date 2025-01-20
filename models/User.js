@@ -3,9 +3,17 @@ const mongoose = require('mongoose')
 
 const User = new mongoose.Schema(
   {
-    name: {
+    clerkId: {
       type: String,
       required: true,
+    },
+    firstName: {
+      type: String,
+      required: false,
+    },
+    lastName: {
+      type: String,
+      required: false,
     },
     username: {
       type: String,
@@ -19,13 +27,13 @@ const User = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      // required: true,
     },
-    phoneNumber: {
-      type: String,
-      required: true,
-      unique: true,
-    },
+    // phoneNumber: {
+    //   type: String,
+    //   required: false,
+    //   default: null
+    // },
     profileImg: {
       type: String,
     },
@@ -94,6 +102,10 @@ const User = new mongoose.Schema(
       // unique: true, // Unique ID from the OAuth provider (e.g., Google ID)
       default: null,
       unique: false,
+    },
+    isPrivateAccount: {
+      type: Boolean,
+      default: false, // Whether the user's account is private
     },
   },
   {

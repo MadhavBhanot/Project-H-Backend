@@ -3,12 +3,17 @@ const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit')
+const bodyParser = require('body-parser');
 
 const { connectDB } = require('./config/configDB')
 const logger = require('./utils/main/logger')
 const apiRoutes = require('./routes/api')
+const { webhookHandler } = require('./middleware/clerk/webhook');
+
 
 const app = express()
+
+
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 minutes
   limit: 350, // Limit each IP to 350 requests
@@ -24,6 +29,7 @@ app.use(limiter)
 // Request Body Middleware
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
+app.use(bodyParser.json());
 
 // Logging Middleware
 app.use(logger); // Logging Requests To Access Log
@@ -37,6 +43,10 @@ connectDB()
 
 //All API Routes
 app.use(apiRoutes)
+
+// Clerk Webhook middleware 
+app.use(webhookHandler);
+
 app.all('*', (req, res) => {
   res.status(404).json({ message: `${req.originalUrl} is not found on this server` })
 })
