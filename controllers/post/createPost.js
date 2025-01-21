@@ -1,10 +1,8 @@
 const { clerkClient } = require('@clerk/express')
 const Post = require('../../models/Post')
-
-const jwt = require('jsonwebtoken')
+const User = require('../../models/User')
 
 const createPost = async (req, res) => {
-  console.log(process.env.CLERK_SECRET_KEY)
   try {
     const userId = req.userId // Gives the User Id
 
@@ -15,9 +13,15 @@ const createPost = async (req, res) => {
       })
     }
 
-    const { caption } = req.body
+    const user = await User.findOne({ clerkId: userId })
+    if (!user) {
+      console.log('No User')
+    }
+    console.log('user', user)
 
-    if (!caption) {
+    const { image, caption, category } = req.body
+
+    if (!caption || category.length === 0) {
       return res.status(400).json({
         success: false,
         message: 'Missing Required Fields.',
@@ -25,7 +29,7 @@ const createPost = async (req, res) => {
     }
 
     const newPost = new Post({
-      image: req.file?.filename || null,
+      image,
       caption,
       author: userId,
     })
