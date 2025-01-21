@@ -33,7 +33,7 @@ const likeOrUnlikePost = async (req, res) => {
     }
 
     // Find the user by ID
-    const user = await User.findById(userId)
+    const user = await User.findOne({ clerkId: userId })
 
     if (!user) {
       return res.status(404).json({
@@ -43,12 +43,12 @@ const likeOrUnlikePost = async (req, res) => {
     }
 
     // Check if the user already liked the post
-    const hasLiked = post.likes.includes(userId)
+    const hasLiked = post.likes.includes(user._id)
 
     if (hasLiked) {
       // Unlike the post
       post.likes = post.likes.filter(
-        (like) => like.toString() !== userId.toString(),
+        (like) => like.toString() !== user._id.toString(),
       )
       user.likedPosts = user.likedPosts.filter(
         (postId) => postId.toString() !== id.toString(),
@@ -63,7 +63,7 @@ const likeOrUnlikePost = async (req, res) => {
       })
     } else {
       // Like the post
-      post.likes.push(userId)
+      post.likes.push(user._id)
       user.likedPosts.push(id)
 
       await user.save()
