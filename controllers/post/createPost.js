@@ -14,7 +14,7 @@ const createPost = async (req, res) => {
     }
 
     // Pass `userId` directly, as Mongoose expects a string or ObjectId, not an object
-    const user = await User.findById(userId)
+    const user = await User.findOne({ clerkId: userId })
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -36,7 +36,7 @@ const createPost = async (req, res) => {
       image,
       caption,
       category,
-      author: userId,
+      author: user._id,
     })
 
     const savedPost = await newPost.save()
