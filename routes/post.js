@@ -1,9 +1,7 @@
 const express = require('express')
 const postRouter = express.Router()
-const verifyToken = require('../middleware/auth/verifyToken.js')
 const checkObjectID = require('../middleware/main/checkObjectID')
 const upload = require('../utils/main/imageUploading')
-const { ClerkExpressRequireAuth } = require('@clerk/clerk-sdk-node')
 const { verifyClerkToken } = require('../middleware/clerk/verifyToken.js')
 
 // // Unprotected routes
