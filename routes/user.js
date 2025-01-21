@@ -15,7 +15,7 @@ userRouter.post(
 ) // Follow or Unfllow a User
 userRouter.get('/followers/:id', require('../controllers/user/getFollowerList')) // Get User's Follwers List
 userRouter.get(
-  '/:id/following',
+  '/following/:id',
   require('../controllers/user/getFollowingList'),
 ) // Get User's Following List
 userRouter.patch('/:id', require('../controllers/user/updateUser')) // Update User's Profile
