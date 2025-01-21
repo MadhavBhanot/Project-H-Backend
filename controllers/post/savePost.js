@@ -6,7 +6,7 @@ const savePost = async (req, res) => {
   if (!id) {
     return res.status(400).json({ message: 'Post Id is Required' })
   }
-  const userId = req.user.userId
+  const userId = req.userId
 
   try {
     const post = await Post.findById(id)
