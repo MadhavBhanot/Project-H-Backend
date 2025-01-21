@@ -14,7 +14,7 @@ const savePost = async (req, res) => {
       return res.status(404).json({ message: 'Post not found' })
     }
 
-    const user = await User.findById({_id:userId})
+    const user = await User.findById({ _id: userId })
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
     }
