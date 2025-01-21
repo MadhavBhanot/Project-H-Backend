@@ -1,5 +1,5 @@
-const { clerkClient } = require('@clerk/clerk-sdk-node')
-const jwt = require('jsonwebtoken')
+const { clerkClient } = require('@clerk/express')
+const generateToken = require('../../middleware/clerk/generateToken');
 
 // Create a new user in Clerk and create a session
 const createUser = async (req, res) => {
@@ -15,15 +15,9 @@ const createUser = async (req, res) => {
       password,
     })
 
-    // Issue a jwt
-    const jwtToken = jwt.sign(
-      { userId: clerkUser.id },
-      process.env.JWT_SECRET_KEY, // Ensure this is set in your .env file
-      {
-        expiresIn: '100h',
-      },
-    )
-
+    //Token Generate\
+    const jwtToken = await generateToken(res,clerkUser.id)
+    
     // Log the JWT token to ensure it's being issued properly
     console.log('JWT Token:', jwtToken)
 
@@ -34,7 +28,7 @@ const createUser = async (req, res) => {
         id: clerkUser.id,
         firstName: clerkUser.firstName,
         lastName: clerkUser.lastName,
-        email: clerkUser.emailAddresses,
+        email: clerkUser.emailAddresses[0].emailAddress,
         username: clerkUser.username,
       },
       token: jwtToken,
