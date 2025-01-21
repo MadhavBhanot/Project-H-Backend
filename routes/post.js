@@ -21,6 +21,7 @@ postRouter.post(
   require('../controllers/post/createPost.js'),
 ) // Create a new post
 
+postRouter.get('/:id', require('../controllers/post/getPostById.js')) // Get a specific post
 // Checking ID in query paramaters
 // postRouter.use(checkObjectID)
 // postRouter.patch('/update/:id', require('../controllers/post/updatePost.js')) // Update a post
