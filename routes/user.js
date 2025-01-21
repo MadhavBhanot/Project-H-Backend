@@ -13,7 +13,7 @@ userRouter.post(
   '/follow/:id',
   require('../controllers/user/followOrUnfollowUser'),
 ) // Follow or Unfllow a User
-userRouter.get('/:id/followers', require('../controllers/user/getFollowerList')) // Get User's Follwers List
+userRouter.get('/followers/:id', require('../controllers/user/getFollowerList')) // Get User's Follwers List
 userRouter.get(
   '/:id/following',
   require('../controllers/user/getFollowingList'),
