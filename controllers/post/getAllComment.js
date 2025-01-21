@@ -1,4 +1,5 @@
 const Post = require('../../models/Post')
+const Comment = require('../../models/Comment')
 
 const getAllComment = async (req, res) => {
   // Check for post Id
@@ -19,6 +20,7 @@ const getAllComment = async (req, res) => {
       comments: post.comments,
     })
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ message: 'Error Getting Comments' })
   }
 }
