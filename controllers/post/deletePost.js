@@ -22,17 +22,14 @@ const deletePost = async (req, res) => {
             });
         }
 
+        // Check if the post belongs to the authenticated user
         const user = await User.findById(post.author); 
-
         if (!user) {
             return res.status(404).json({
                 success: false,
                 message: "Author not found.",
             });
         }
-
-
-        // Check if the post belongs to the authenticated user
         if (user.clerkId.toString() !== req.userId) {
             return res.status(403).json({
                 success: false,
