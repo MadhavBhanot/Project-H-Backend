@@ -1,4 +1,4 @@
-const { clerkClient } = require('@clerk/express')
+const generateToken = require('../../middleware/clerk/generateToken');
 const User = require('../../models/User')
 
 const login = async (req, res) => {
@@ -13,27 +13,13 @@ const login = async (req, res) => {
 
     console.log('User found:', user, user.clerkId)
 
-    // Generate a sign-in token with the Clerk JWT template
-    const tokenResponse = await clerkClient.signInTokens.createSignInToken({
-      userId: user.clerkId, // Clerk user ID from your database
-      expiresInSeconds: 60 * 60 * 24 * 7, // 1 week expiry
-    })
-
-    const accessToken = tokenResponse.token
-
-    console.log('Generated access token:', accessToken)
-
-    // Set the token as an HTTP-only cookie
-    res.cookie('token', accessToken, {
-      httpOnly: true,
-      maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-    })
+    // Generate a sign-in token 
+    const jwtToken = await generateToken(res, user.clerkId)
+    console.log("Token....",jwtToken)
 
     return res
       .status(200)
-      .json({ Status: 1, Message: 'Login successful', accessToken, user })
+      .json({ Status: 1, Message: 'Login successful',user, token: jwtToken })
   } catch (error) {
     console.error('Error during login:', error)
     return res
