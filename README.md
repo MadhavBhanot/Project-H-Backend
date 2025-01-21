@@ -64,16 +64,13 @@ node index.js
 
 ## Auth Routes
 
-| Method | Endpoint                | Description     |
-| ------ | ----------------------- | --------------- |
-| POST   | `/auth/register`        | Register a user |
-| POST   | `/auth/login`           | User login      |
-| POST   | `/auth/verify-otp`      | Verify OTP      |
-| POST   | `/auth/resent-otp`      | Resend OTP      |
-| POST   | `/auth/forgot-password` | Forgot Password |
-| POST   | `/auth/reset-password`  | Reset Password  |
-| POST   | `/auth/google`          | Google OAuth    |
-| POST   | `/auth/github`          | GitHub OAuth    |
+| Method | Endpoint                   | Description  |
+| ------ | -------------------------- | ------------ |
+| POST   | `/auth/login`              | User login   |
+| POST   | `/auth/google`             | Google OAuth |
+| POST   | `/auth/github`             | GitHub OAuth |
+| POST   | `/auth/updateUser/:userId` | Update User  |
+| POST   | `/auth/deleteUser/:userId` | Delete User  |
 
 ---
 
