@@ -35,11 +35,13 @@ const createPost = async (req, res) => {
     const newPost = new Post({
       image,
       caption,
-      category, // Assuming `category` is part of the post schema
-      author: userId, // Reference the user ID as the author
+      category,
+      author: userId,
     })
 
     const savedPost = await newPost.save()
+    user.posts.push(newPost._id)
+    await user.save()
 
     res.status(201).json({
       success: true,
