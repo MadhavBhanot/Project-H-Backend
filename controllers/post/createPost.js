@@ -4,7 +4,7 @@ const User = require('../../models/User')
 
 const createPost = async (req, res) => {
   try {
-    const userId = req.userId // Gives the User Id
+    const userId = req.userId // Gives the User ID
 
     if (!userId) {
       return res.status(401).json({
@@ -13,25 +13,30 @@ const createPost = async (req, res) => {
       })
     }
 
-    const user = await User.findOne({ clerkId: userId })
+    // Pass `userId` directly, as Mongoose expects a string or ObjectId, not an object
+    const user = await User.findById(userId)
     if (!user) {
-      console.log('No User')
+      return res.status(404).json({
+        success: false,
+        message: 'User not found.',
+      })
     }
-    console.log('user', user)
+    console.log(user)
 
     const { image, caption, category } = req.body
 
-    if (!caption || category.length === 0) {
+    if (!caption || !category || category.length === 0) {
       return res.status(400).json({
         success: false,
-        message: 'Missing Required Fields.',
+        message: 'Missing required fields.',
       })
     }
 
     const newPost = new Post({
       image,
       caption,
-      author: userId,
+      category, // Assuming `category` is part of the post schema
+      author: userId, // Reference the user ID as the author
     })
 
     const savedPost = await newPost.save()
