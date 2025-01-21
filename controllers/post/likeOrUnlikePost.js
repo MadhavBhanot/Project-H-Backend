@@ -1,63 +1,87 @@
-// Like or unlike a post both the actions will be handled here
-const Post = require('../../models/Post');
-const User = require('../../models/User');
+const Post = require('../../models/Post')
+const User = require('../../models/User')
 
 const likeOrUnlikePost = async (req, res) => {
-    try {
-        const { id } = req.params;
+  console.log('Hit')
+  try {
+    const { id } = req.params
 
-        if (!id) {
-            return res.status(400).json({
-                success: false,
-                message: "Post ID is required.",
-            });
-        }
-
-        const post = await Post.findById(id);
-
-        if (!post) {
-            return res.status(404).json({
-                success: false,
-                message: "Post not found.",
-            });
-        }
-
-        const userId = req.user.userId;
-        const user = User.findById(userId);
-
-        if (post.likes.includes(userId)) {
-            // User already liked the post, so unlike it
-            post.likes = post.likes.filter((like) => like !== userId);
-            user.likedPosts.pull(id);
-
-            await user.save();
-            await post.save();
-            
-            return res.status(200).json({
-                success: true,
-                message: "Post unlike successfully.",
-            });
-        } else {
-            // User has not liked the post, so like it
-            post.likes.push(userId);
-            user.likedPosts.push(id);
-
-            await user.save();
-            await post.save();
-
-            return res.status(200).json({
-                success: true,
-                message: "Post liked successfully.",
-            });
-        }
-    } catch (error) {
-        console.error('Error in liking or Unliking the post:', error);
-        res.status(500).json({
-            success: false,
-            message: "An error occurred while liking or unliking the post.",
-            error: error.message,
-        });
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: 'Post ID is required.',
+      })
     }
-};
 
-module.exports = likeOrUnlikePost;
+    // Find the post by ID
+    const post = await Post.findById(id)
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: 'Post not found.',
+      })
+    }
+
+    const userId = req.userId
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'User ID is required.',
+      })
+    }
+
+    // Find the user by ID
+    const user = await User.findById(userId)
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found.',
+      })
+    }
+
+    // Check if the user already liked the post
+    const hasLiked = post.likes.includes(userId)
+
+    if (hasLiked) {
+      // Unlike the post
+      post.likes = post.likes.filter(
+        (like) => like.toString() !== userId.toString(),
+      )
+      user.likedPosts = user.likedPosts.filter(
+        (postId) => postId.toString() !== id.toString(),
+      )
+
+      await user.save()
+      await post.save()
+
+      return res.status(200).json({
+        success: true,
+        message: 'Post unliked successfully.',
+      })
+    } else {
+      // Like the post
+      post.likes.push(userId)
+      user.likedPosts.push(id)
+
+      await user.save()
+      await post.save()
+
+      return res.status(200).json({
+        success: true,
+        message: 'Post liked successfully.',
+      })
+    }
+  } catch (error) {
+    console.error('Error in liking or unliking the post:', error)
+    res.status(500).json({
+      success: false,
+      message: 'An error occurred while liking or unliking the post.',
+      error: error.message,
+    })
+  }
+}
+
+module.exports = likeOrUnlikePost

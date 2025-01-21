@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken') // Import jsonwebtoken for decoding and veri
 
 const verifyClerkToken = async (req, res, next) => {
   const token =
-    req.headers.authorization?.split(' ')[1] || req.cookies.__clerk_token
+    req.headers.authorization?.split(' ')[1] || req.cookies?.__clerk_token
   console.log('token', token)
 
   if (!token) {

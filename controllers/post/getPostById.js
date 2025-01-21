@@ -14,7 +14,12 @@ const getPostById = async (req, res) => {
     }
 
     // Find the post by ID and populate user data
-    const post = await Post.findById(id).populate('user', 'username email')
+    const post = await Post.findById(id)
+      .populate({
+        path: 'author',
+        select: 'username', // Select only the username field of the author
+      })
+      .select('author') // Select only the author field of the post
 
     // Check if post exists
     if (!post) {
