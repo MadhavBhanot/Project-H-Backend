@@ -1,178 +1,164 @@
-# Project H Backend
+# **Project H Backend**
 
-## Prerequisites
-
-Before running this project, ensure you have the following installed:
-
-- **Node.js** (v14+)
-- **MongoDB** (locally or via a service like MongoDB Atlas)
+A powerful backend system designed to handle user authentication, social interactions, job postings, and more with seamless integrations like Clerk and Ngrok. Built using **Node.js**, **Express.js** and **MongoDB**, this backend ensures scalability, reliability, and security.
 
 ---
 
-## Getting Started
+## **🌟 Features**
 
-Follow these steps to set up the project:
+- User Authentication (OAuth, OTP, Forgot Password)
+- Post Creation, Likes, and Comments
+- Job Postings and Applications
+- Webhook Integration with Clerk
+- Secure API with Webhook Signature Verification
 
-### 1. Clone the Repository
+---
 
-Clone the repository to your local machine:
+## **⚙️ Prerequisites**
+
+Ensure the following are installed on your system:
+
+- **Node.js** (v14+)
+- **MongoDB** (Local or MongoDB Atlas)
+- **Ngrok** (For webhook testing)
+
+---
+
+## **🚀 Getting Started**
+
+Follow these steps to set up and run the project:
+
+### **1. Clone the Repository**
 
 ```bash
 git clone https://github.com/SHIVAM-KUMAR-59/Project-H-Backend.git
+cd Project-H-Backend
 ```
 
-### 2. Install Dependencies
-
-Navigate into the project directory and install all required dependencies:
+### **2. Install Dependencies**
 
 ```bash
 npm install
 ```
 
-### 3. Run the Application
+### **3. Set Environment Variables**
 
-Start the application using the following command:
+Create a .env file in the root directory and add the following:
+
+```bash
+CLERK_PUBLISHABLE_KEY=your_publishable_key
+CLERK_SECRET_KEY=your_secret_key
+CLERK_WEBHOOK_SECRET=your_webhook_secret
+SIGNING_SECRET=whsec_1234567890abcdef
+```
+
+### **4. Run the Application**
 
 ```bash
 node index.js
 ```
 
-## Tasks
+---
 
-### ✅ 1. Create Schemas
+# 📜 API Routes
 
-- [x] Design and implement Mongoose schema for **User**:
+## Auth Routes
 
-- [x] Design and implement Mongoose schema for **Post**:
-
-- [x] Design and implement Mongoose schema for **Job**:
-
-- [x] Design and implement Mongoose schema for **Comment**:
+| Method | Endpoint                | Description     |
+| ------ | ----------------------- | --------------- |
+| POST   | `/auth/register`        | Register a user |
+| POST   | `/auth/login`           | User login      |
+| POST   | `/auth/verify-otp`      | Verify OTP      |
+| POST   | `/auth/resent-otp`      | Resend OTP      |
+| POST   | `/auth/forgot-password` | Forgot Password |
+| POST   | `/auth/reset-password`  | Reset Password  |
+| POST   | `/auth/google`          | Google OAuth    |
+| POST   | `/auth/github`          | GitHub OAuth    |
 
 ---
 
-### 2. ✅ Create Routes
+## User Routes
 
-### ✅ Auth Routes
-
-- [x] `POST /auth/register` - Register a new user.
-- [x] `POST /auth/login` - Authenticate and log in a user.
-- [x] `POST /auth/verify-otp` - Otp Verification.
-- [x] `POST /auth/resent-otp` - Resent Otp
-- [x] `POST /auth/forgot-password` - Forgot Password
-- [x] `POST /auth/reset-password` - Reset Password
-- [x] `POST /auth/google` - Google OAuth
-- [x] `POST /auth/github` - Github OAuth
-
-#### ✅ User Routes
-
-- [x] `GET /users/:id` - Get user details by ID.
-- [x] `PATCH /users/:id` - Update user profile.
-- [x] `DELETE /users/:id` - Delete a user.
-- [x] `POST /users/:id/follow-unfollow` - Follow or Unfollow a user.
-- [x] `GET /users/:id/followers` - Get a user's followers list.
-- [x] `GET /users/:id/following` - Get a user's following list.
-
-#### ✅ Post Routes
-
-- [x] `POST /posts` - Create a new post.
-- [x] `GET /posts` - Get all posts.
-- [x] `GET /posts/:id` - Get a post by ID.
-- [x] `PATCH /posts/:id` - Update a post.
-- [x] `DELETE /posts/:id` - Delete a post.
-- [x] `POST /posts/:id/like-unlike` - Like or Unlike a post.
-- [x] `POST /posts/:id/comment` - Add a comment to a post.
-- [x] `GET /posts/:id/comments` - Get all comments for a post.
-
-#### ✅ Job Routes
-
-- [x] `POST /jobs` - Create a new job posting.
-- [x] `GET /jobs` - Get all job postings.
-- [x] `GET /jobs/:id` - Get a job by ID.
-- [x] `PATCH /jobs/:id` - Update a job posting.
-- [x] `DELETE /jobs/:id` - Delete a job posting.
-- [x] `POST /jobs/:id/apply` - Apply for a job.
-- [x] `GET /jobs/:id/applicants` - Get a list of applicants for a job.
-
-#### ✅ Comment Routes
-
-- [x] `GET /comments/:id` - Get a comment by ID.
-- [x] `PATCH /comments/:id` - Update a comment.
-- [x] `DELETE /comments/:id` - Delete a comment.
-- [x] `POST /comments/:id/reply` - Reply to a comment.
-- [x] `GET /comments/:id/replies` - Get all replies for a comment.
+| Method | Endpoint                     | Description            |
+| ------ | ---------------------------- | ---------------------- |
+| GET    | `/users/:id`                 | Get user details by ID |
+| PATCH  | `/users/:id`                 | Update user profile    |
+| DELETE | `/users/:id`                 | Delete user            |
+| POST   | `/users/:id/follow-unfollow` | Follow/Unfollow user   |
+| GET    | `/users/:id/followers`       | Get followers          |
+| GET    | `/users/:id/following`       | Get following          |
 
 ---
 
-### 3. Test Routes
+## Post Routes
 
-- [ ] Test all the routes using **Postman** or similar API testing tools.
+| Method | Endpoint                 | Description         |
+| ------ | ------------------------ | ------------------- |
+| POST   | `/posts`                 | Create a post       |
+| GET    | `/posts`                 | Get all posts       |
+| GET    | `/posts/:id`             | Get post by ID      |
+| PATCH  | `/posts/:id`             | Update post         |
+| DELETE | `/posts/:id`             | Delete post         |
+| POST   | `/posts/:id/like-unlike` | Like/Unlike post    |
+| POST   | `/posts/:id/comment`     | Add comment to post |
+| GET    | `/posts/:id/comments`    | Get comments        |
 
 ---
 
-## NGROK server Set Up
+## Job Routes
 
-- Create an account on [Ngrok](https://ngrok.com/) if you don't have one.
-- Follow the **ngrok** installation guide to install it on your local system.
-- Once installed, run the following command in your terminal to start a tunnel for your local server:
-```bash
-ngrok http 5002(PORT)  // Used **PORT** according to you run your project on which PORT
+| Method | Endpoint               | Description        |
+| ------ | ---------------------- | ------------------ |
+| POST   | `/jobs`                | Create job post    |
+| GET    | `/jobs`                | Get all job posts  |
+| GET    | `/jobs/:id`            | Get job post by ID |
+| PATCH  | `/jobs/:id`            | Update job post    |
+| DELETE | `/jobs/:id`            | Delete job post    |
+| POST   | `/jobs/:id/apply`      | Apply for job      |
+| GET    | `/jobs/:id/applicants` | Get job applicants |
 
-```
-- This will give you a public URL like (e.g., https://fawn-two-nominally.ngrok-free.app) that can be used to send webhook payloads to your local server.
+---
 
+## Comment Routes
 
-## Set Up Clerk Webhook
-- Log in to your **Clerk Dashboard**.
-- Navigate to the **Configre** page -> **Webhooks** page.
-- click **Add Endpoint**.
-- In the Endpoint URL field, paste the URL from **Ngrok,** followed by **/api/webhooks** like (e.g., https://146f-106-219-121-105.ngrok-free.app/api/webhooks).
-- Under Subscribe to events, select `user.created`, `user.updated` and `user.deleted` (or other events as needed).
-- Copy the Signing Secret and save it to your **.env.local** file, like this:
-```
-SIGNING_SECRET=whsec_1234567890abcdef
+| Method | Endpoint                | Description       |
+| ------ | ----------------------- | ----------------- |
+| GET    | `/comments/:id`         | Get comment by ID |
+| PATCH  | `/comments/:id`         | Update comment    |
+| DELETE | `/comments/:id`         | Delete comment    |
+| POST   | `/comments/:id/reply`   | Reply to comment  |
+| GET    | `/comments/:id/replies` | Get replies       |
 
-```
-### Add Clerk Credential in .env file 
+---
 
-- Navigate to **Clerk Dashboard** -> **Configure** page.
-- Click on **API Key** and Copy the `CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`.
-- And add key in your env file. 
+# 🛠️ Setting Up Ngrok
 
-```
-CLERK_PUBLISHABLE_KEY= your_publishable_key
-CLERK_SECRET_KEY= your_api_key
-CLERK_WEBHOOK_SECRET= your_webhook_singing_key
+1. **Install Ngrok**  
+   Download and install Ngrok from the [Ngrok Website](https://ngrok.com/download).
 
-```
-
-### Install Required Packages
-
-Install the necessary dependencies:
+2. **Start Ngrok Tunnel**  
+   Run the following command to start an Ngrok tunnel for your application:
 
 ```bash
-
-npm install @clerk/express svix
-
+ngrok http 5001
 ```
-## Package Details
-- **1. @clerk/express** – Clerk SDK to interact with the Clerk API.
-- **2. svix** – Used for **webhook** signature verification.
 
----
+    Replace `5001` with the port number your application is running on.
 
-## Schema Diagram:
+3. **Copy the Generated URL**
+   After running the command, Ngrok will generate a public URL (e.g., `https://example.ngrok-free.app`).
+   Use this URL to configure webhooks.
+
+# 📊 Schema Diagram
 
 <img src="./Project-H-Backend.png" style="border-radius: 8px;"></img>
 
-## User Flow:
+# 🔄 User Flow
 
 <img src="./User-Flow.png" style="border-radius: 8px;"></img>
 
-
-
 ---
 
+# 🧪 Testing
 
-
-
+Use Postman or any API testing tool to test all the endpoints and ensure proper functionality.
