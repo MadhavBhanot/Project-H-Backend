@@ -28,6 +28,7 @@ postRouter.get('/:id', require('../controllers/post/getPostById.js')) // Get a s
 // postRouter.delete('/delete/:id', require('../controllers/post/deletePost.js')) // Delete a post
 postRouter.post('/like/:id', require('../controllers/post/likeOrUnlikePost.js')) // Like or unlike a post
 postRouter.post('/save/:id', require('../controllers/post/savePost.js')) // Save a post
+postRouter.get('/user/:id', require('../controllers/post/getPostByUser.js'))
 // postRouter.get('/comments/:id', require('../controllers/post/getAllComment.js')) // Get all comments for a post
 // postRouter.post('/comment/:id', require('../controllers/post/addComment.js')) // Add a comment to a post
 
