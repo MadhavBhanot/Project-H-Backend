@@ -93,16 +93,7 @@ const User = new mongoose.Schema(
         ref: 'Job',
       },
     ],
-    oauthProvider: {
-      type: String, // e.g., 'google', 'github'
-      enum: ['google', 'github'],
-    },
-    oauthProviderId: {
-      type: String,
-      // unique: true, // Unique ID from the OAuth provider (e.g., Google ID)
-      default: null,
-      unique: false,
-    },
+
     isPrivateAccount: {
       type: Boolean,
       default: false, // Whether the user's account is private
