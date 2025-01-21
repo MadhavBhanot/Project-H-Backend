@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken') // Import jsonwebtoken for decoding and verification
+const User = require('../../models/User')
 
 const verifyClerkToken = async (req, res, next) => {
   const token =
@@ -23,6 +24,24 @@ const verifyClerkToken = async (req, res, next) => {
     }
     req.userId = decoded.payload.userId
     console.log('req.userId', req.userId)
+
+    // Fetch the user from the database based on `clerkId`
+    const user = await User.findOne({ clerkId: req.userId }).select('email username _id');
+    if (!user) {
+        return res.status(404).json({
+            success: false,
+            message: "User not found.",
+        });
+    }
+
+    // Attach the user details to the request object (excluding sensitive info)
+    req.user = {
+        userId: user._id,
+        username: user.username,
+        email: user.email
+    };
+
+
     next()
   } catch (error) {
     console.error('Error decoding token:', error)

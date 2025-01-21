@@ -29,18 +29,17 @@ const updatePost = async (req, res) => {
       })
     }
 
-    const user = await User.findOne({ clerkId: req.userId })
-    console.log(user)
-
+    // Find the user who created the post
+    const user = await User.findById(post.author)
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found.',
-      })
+        return res.status(404).json({
+            success: false,
+            message: 'Author not found.',
+        })
     }
 
     // Check if the post belongs to the authenticated user
-    if (post.author.toString() !== user._id.toString()) {
+    if (post.author.toString() !== req.user.userId.toString()) {
       return res.status(403).json({
         success: false,
         message: 'You are not authorized to update this post.',

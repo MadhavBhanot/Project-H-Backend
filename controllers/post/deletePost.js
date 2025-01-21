@@ -33,7 +33,7 @@ const deletePost = async (req, res) => {
     }
 
     // Check if the authenticated user is the owner of the post
-    if (req.userId.toString() !== post.author.toString()) {
+    if (req.user.userId.toString() !== post.author.toString()) {
       return res.status(403).json({
         success: false,
         message: 'You are not authorized to delete this post.',
