@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 // Routes
+<<<<<<< HEAD
 router.use('/auth', require('../routes/auth'))
 router.use('/posts', require('../routes/post'))
 // router.use('/jobs', require('../routes/job'))
@@ -23,5 +24,13 @@ router.stack.forEach((r) => {
     });
   }
 });
+=======
+router.use('/api/auth', require('../routes/auth'))
+router.use('/api/posts', require('../routes/post'))
+// router.use('/api/jobs', require('../routes/job'))
+router.use('/api/users', require('../routes/user'))
+router.use('/api/comments', require('../routes/comment'))
+router.use('/api/clerk', require('../routes/clerk'))
+>>>>>>> 8c87a8c (Comments)
 
 module.exports = router
