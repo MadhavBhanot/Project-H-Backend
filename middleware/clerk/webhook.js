@@ -1,4 +1,3 @@
-const { clerkClient } = require('@clerk/express')
 const { Webhook } = require('svix')
 const User = require('../../models/User')
 require('dotenv').config()
@@ -8,137 +7,116 @@ const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET
 
 // Function to handle the webhook events
 const webhookHandler = async (req, res) => {
-  if (!WEBHOOK_SECRET) {
-    throw new Error('Please add WEBHOOK_SECRET from Clerk Dashboard to .env')
-  }
-
-  // Get the Svix headers from the request
-  const svixId = req.headers['svix-id']
-  const svixTimestamp = req.headers['svix-timestamp']
-  const svixSignature = req.headers['svix-signature']
-
-  // Check if required headers are present
-  if (!svixId || !svixTimestamp || !svixSignature) {
-    console.log('Missing Svix headers')
-    return res.status(400).send('Missing Svix headers')
-  }
-
-  // Get the raw body for signature verification
   const payload = req.body
-  console.log('Payload', payload)
-  const body = JSON.stringify(payload)
+  const headers = req.headers
 
-  // Initialize Svix with your secret key
-  const wh = new Webhook(WEBHOOK_SECRET)
-
-  let event
+  console.log('Webhook received:', {
+    type: headers['svix-event-type'],
+    id: headers['svix-id']
+  })
 
   try {
-    // Verify the webhook payload with headers
-    event = wh.verify(body, {
-      'svix-id': svixId,
-      'svix-timestamp': svixTimestamp,
-      'svix-signature': svixSignature,
+    const wh = new Webhook(WEBHOOK_SECRET)
+    const evt = wh.verify(payload.toString(), {
+      'svix-id': headers['svix-id'],
+      'svix-timestamp': headers['svix-timestamp'],
+      'svix-signature': headers['svix-signature']
     })
+
+    const { type, data } = evt
+    console.log('Processing webhook:', { type, data })
+
+    switch (type) {
+      case 'user.created':
+        await handleUserCreated(data)
+        break
+      case 'user.updated':
+        await handleUserUpdated(data)
+        break
+      case 'user.deleted':
+        await handleUserDeleted(data)
+        break
+      case 'email.verified':
+        await handleEmailVerified(data)
+        break
+      default:
+        console.log('Unhandled webhook type:', type)
+    }
+
+    res.json({ success: true })
   } catch (err) {
-    console.error('Error verifying webhook:', err)
-    return res.status(400).send('Error verifying webhook')
-  }
-
-  // Handle different event types
-  const eventType = event.type
-  const eventData = event.data
-  console.log('Event Data', eventData)
-
-  try {
-    // Handle the user.created event
-    if (eventType === 'user.created') {
-      const { id, email_addresses, first_name, last_name, username, password } =
-        eventData
-      const userData = {
-        clerkId: id,
-        email: email_addresses[0].email_address,
-        username: username || '',
-        firstName: first_name || '',
-        lastName: last_name || '',
-        // phoneNumber: phone_numbers[0].phone_number || null,
-        password: password || null, // Set password to null if it's not available
-      }
-
-      // Save the new user to MongoDB
-      const newUser = new User(userData)
-      await newUser.save()
-
-      // Update Clerk metadata with MongoDB user ID
-      await clerkClient.users.updateUserMetadata(id, {
-        publicMetadata: {
-          userId: newUser._id.toString(),
-        },
-      })
-
-      return res.status(200).json({
-        message: 'New user created successfully and stored in MongoDB',
-        user: newUser,
-      })
-    }
-
-    // Handle the user.updated event
-    if (eventType === 'user.updated') {
-      const { id, email_addresses, first_name, last_name, username } = eventData
-
-      // Find the user in MongoDB by their Clerk ID and update their details
-      const updatedUser = await User.findOneAndUpdate(
-        { clerkId: id },
-        {
-          email: email_addresses[0].email_address,
-          username: username || '',
-          firstName: first_name || '',
-          lastName: last_name || '',
-          // phoneNumber: phone_numbers[0].phone_number
-        },
-        { new: true }, // Return the updated document
-      )
-
-      if (!updatedUser) {
-        return res.status(404).json({
-          message: 'User not found',
-        })
-      }
-
-      return res.status(200).json({
-        message: 'User updated successfully',
-        user: updatedUser,
-      })
-    }
-
-    // Handle the user.deleted event
-    if (eventType === 'user.deleted') {
-      const { id } = eventData
-
-      // Find the user in MongoDB by their Clerk ID and delete them
-      const deletedUser = await User.findOneAndDelete({ clerkId: id })
-
-      if (!deletedUser) {
-        return res.status(404).json({
-          message: 'User not found',
-        })
-      }
-
-      return res.status(200).json({
-        message: 'User deleted successfully',
-        user: deletedUser,
-      })
-    }
-
-    // Handle unhandled event types
-    console.log(`Unhandled event type: ${eventType}`)
-    return res.status(200).send('Event received')
-  } catch (error) {
-    console.error('Error handling event:', error)
-    return res.status(500).json({
-      message: 'Error handling event',
-      error: error.message,
+    console.error('Webhook error:', err)
+    res.status(400).json({
+      success: false,
+      error: err.message
     })
+  }
+}
+
+async function handleUserCreated(data) {
+  try {
+    console.log('Creating user from webhook:', data)
+    const user = new User({
+      clerkId: data.id,
+      firstName: data.first_name,
+      lastName: data.last_name,
+      email: data.email_addresses[0].email_address,
+      username: data.username,
+      isVerified: data.email_addresses[0].verification?.status === 'verified'
+    })
+    await user.save()
+    console.log('User created in MongoDB:', user._id)
+  } catch (error) {
+    console.error('Error creating user from webhook:', error)
+  }
+}
+
+async function handleUserUpdated(data) {
+  try {
+    console.log('Updating user from webhook:', data)
+    const user = await User.findOne({ clerkId: data.id })
+    if (!user) {
+      console.log('User not found for update:', data.id)
+      return
+    }
+
+    user.firstName = data.first_name
+    user.lastName = data.last_name
+    user.email = data.email_addresses[0].email_address
+    user.username = data.username
+    user.isVerified = data.email_addresses[0].verification?.status === 'verified'
+
+    await user.save()
+    console.log('User updated in MongoDB:', user._id)
+  } catch (error) {
+    console.error('Error updating user from webhook:', error)
+  }
+}
+
+async function handleUserDeleted(data) {
+  try {
+    console.log('Deleting user from webhook:', data)
+    const result = await User.deleteOne({ clerkId: data.id })
+    console.log('User deleted from MongoDB:', result)
+  } catch (error) {
+    console.error('Error deleting user from webhook:', error)
+  }
+}
+
+async function handleEmailVerified(data) {
+  try {
+    console.log('Handling email verification from webhook:', data)
+    const user = await User.findOne({ clerkId: data.user_id })
+    if (!user) {
+      console.log('User not found for email verification:', data.user_id)
+      return
+    }
+
+    user.isVerified = true
+    await user.save()
+    console.log('User email verified in MongoDB:', user._id)
+  } catch (error) {
+    console.error('Error handling email verification from webhook:', error)
   }
 }
 

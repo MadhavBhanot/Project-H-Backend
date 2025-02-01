@@ -1,51 +1,41 @@
 const jwt = require('jsonwebtoken') // Import jsonwebtoken for decoding and verification
 const User = require('../../models/User')
 
-const verifyClerkToken = async (req, res, next) => {
-  const token =
-    req.headers.authorization?.split(' ')[1] || req.cookies?.__clerk_token
-  console.log('token', token)
-
-  if (!token) {
-    return res.status(401).json({ message: 'Unauthorized: Token is missing' })
-  }
-
+const verifyToken = async (req, res, next) => {
   try {
-    // Decode the JWT without verifying it
-    const decoded = jwt.decode(token, { complete: true })
-
-    if (!decoded) {
-      console.log('Invalid token')
-    } else {
-      console.log('Decoded token:', decoded)
-      // Accessing the header and payload
-      console.log('Header:', decoded.header)
-      console.log('Payload:', decoded.payload)
+    const token = req.headers.authorization?.split(' ')[1]
+    
+    if (!token) {
+      return res.status(401).json({ 
+        success: false, 
+        message: 'No token provided' 
+      })
     }
-    req.userId = decoded.payload.userId
-    console.log('req.userId', req.userId)
 
-    // Fetch the user from the database based on `clerkId`
-    const user = await User.findOne({ clerkId: req.userId }).select('email username _id');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    const user = await User.findById(decoded.userId)
+
     if (!user) {
-        return res.status(404).json({
-            success: false,
-            message: "User not found.",
-        });
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Invalid token' 
+      })
     }
 
-    // Attach the user details to the request object (excluding sensitive info)
     req.user = {
-        userId: user._id,
-        username: user.username,
-        email: user.email
-    };
-
+      userId: user._id,
+      email: user.email,
+      isVerified: user.isVerified
+    }
 
     next()
   } catch (error) {
-    console.error('Error decoding token:', error)
+    console.error('Token verification error:', error)
+    return res.status(401).json({ 
+      success: false, 
+      message: 'Invalid token' 
+    })
   }
 }
 
-module.exports = { verifyClerkToken }
+module.exports = verifyToken

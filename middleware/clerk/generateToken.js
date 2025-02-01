@@ -10,14 +10,12 @@ const jwt = require('jsonwebtoken');
 const generateToken = (res, userId) => {
   try {
     // Generate the JWT token
-    const jwtToken = jwt.sign(
-      { userId }, // Payload with the user ID
-      process.env.JWT_SECRET_KEY, // Secret key from the environment variable
-      { expiresIn: '100h' } // Token expiration time
-    );
+    const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
+      expiresIn: '30d', // Increase token expiry to 30 days
+    });
 
     // Set the JWT token in an HTTP-only cookie
-    res.cookie('token', jwtToken, {
+    res.cookie('token', token, {
       httpOnly: true,          // Prevents client-side JS access to the cookie
       maxAge: 3 * 24 * 60 * 60 * 1000, // Cookie expiration time (3 days)
       secure: process.env.NODE_ENV === 'production', // Use secure cookie in production (HTTPS)
@@ -25,10 +23,10 @@ const generateToken = (res, userId) => {
     });
 
     // Log the generated token for debugging purposes
-    console.log('Generated JWT Token:', jwtToken);
+    console.log('Generated JWT Token:', token);
 
     // Return the token
-    return jwtToken;
+    return token;
   } catch (error) {
     console.error('Error generating token:', error);
     throw new Error('Failed to generate token');

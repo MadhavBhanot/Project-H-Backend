@@ -13,6 +13,9 @@ const { verifyClerkToken } = require('./middleware/clerk/verifyToken')
 
 const app = express()
 
+// Add this line before other middleware
+app.set('trust proxy', 1);  // Trust first proxy
+
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 minutes
   limit: 350, // Limit each IP to 350 requests
@@ -49,9 +52,6 @@ app.get('/api/profile', verifyClerkToken, (req, res) => {
     userId: req.userId, // You can fetch and attach more user data if required
   })
 })
-
-// Clerk Webhook middleware
-app.use(webhookHandler)
 
 app.all('*', (req, res) => {
   res

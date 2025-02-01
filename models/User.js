@@ -1,33 +1,36 @@
 // User Schema
 const mongoose = require('mongoose')
 
-const User = new mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     clerkId: {
       type: String,
-      required: true,
+      // Not required initially, will be added after verification
+      required: false,
+      unique: true,
+      sparse: true // This allows null values while maintaining uniqueness
     },
     firstName: {
       type: String,
-      required: false,
+      required: true
     },
     lastName: {
       type: String,
-      required: false,
+      required: true
     },
     username: {
       type: String,
       required: true,
-      unique: true,
+      unique: true
     },
     email: {
       type: String,
       required: true,
-      unique: true,
+      unique: true
     },
     password: {
       type: String,
-      // required: true,
+      required: true
     },
     // phoneNumber: {
     //   type: String,
@@ -39,7 +42,15 @@ const User = new mongoose.Schema(
     },
     isVerified: {
       type: Boolean,
-      default: false,
+      default: false
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now
     },
     preferences: {
       type: Array,
@@ -98,10 +109,18 @@ const User = new mongoose.Schema(
       type: Boolean,
       default: false, // Whether the user's account is private
     },
+    verificationCode: {
+      type: String,
+      default: null
+    },
+    verificationCodeExpires: {
+      type: Date,
+      default: null
+    },
   },
   {
     timestamps: true,
   },
 )
 
-module.exports = mongoose.model('User', User)
+module.exports = mongoose.model('User', userSchema)
