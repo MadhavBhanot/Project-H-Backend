@@ -23,20 +23,22 @@ const createPost = async (req, res) => {
     }
     console.log(user)
 
-    const { image, caption, category } = req.body
+    const { image, caption, filters, tags, location } = req.body
 
-    if (!caption || !category || category.length === 0) {
+    if (!caption) {
       return res.status(400).json({
         success: false,
-        message: 'Missing required fields.',
+        message: 'Caption is required.',
       })
     }
 
     const newPost = new Post({
       image,
       caption,
-      category,
       author: user._id,
+      filters,
+      tags,
+      location,
     })
 
     const savedPost = await newPost.save()

@@ -13,6 +13,9 @@ const { verifyClerkToken } = require('./middleware/clerk/verifyToken')
 
 const app = express()
 
+// Enable trust proxy
+app.set('trust proxy', 1);
+
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 minutes
   limit: 350, // Limit each IP to 350 requests
@@ -22,7 +25,10 @@ const limiter = rateLimit({
 
 // Security Middlwares
 app.use(helmet())
-app.use(cors())
+app.use(cors({
+  origin: process.env.FRONTEND_URL || ['http://localhost:19000', 'http://localhost:19001', 'http://10.0.2.2:19000', 'http://10.0.2.2:19001'],
+  credentials: true
+}))
 app.use(limiter)
 
 // Request Body Middleware
@@ -38,27 +44,36 @@ app.use(express.static(path.resolve('./public')))
 
 const PORT = process.env.PORT || 5001
 
+// Connect to MongoDB
 connectDB()
 
-//All API Routes
-app.use(apiRoutes)
+// Mount API routes under /api
+app.use('/api', apiRoutes)
+
 // Route to check the user profile
 app.get('/api/profile', verifyClerkToken, (req, res) => {
   res.json({
     message: 'User profile retrieved successfully',
-    userId: req.userId, // You can fetch and attach more user data if required
+    userId: req.userId,
   })
 })
 
-// Clerk Webhook middleware
-app.use(webhookHandler)
+// Clerk Webhook endpoint (only apply webhook handler here)
+app.post('/api/webhook', webhookHandler)
 
+// 404 handler
 app.all('*', (req, res) => {
+  console.log('❌ 404 Not Found:', req.originalUrl);
   res
     .status(404)
     .json({ message: `${req.originalUrl} is not found on this server` })
 })
 
+// Start server
 app.listen(PORT, () => {
-  console.log(`Server running on port http://localhost:${PORT}`)
-})
+  console.log(`
+🚀 Server is running on http://localhost:${PORT}
+📍 API endpoint: http://localhost:${PORT}/api
+🔒 Environment: ${process.env.NODE_ENV || 'development'}
+  `);
+});

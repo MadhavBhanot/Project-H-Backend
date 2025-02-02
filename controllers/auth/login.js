@@ -1,31 +1,72 @@
 const generateToken = require('../../middleware/clerk/generateToken');
-const User = require('../../models/User')
+const User = require('../../models/User');
 
 const login = async (req, res) => {
-  const { email } = req.body
+  const { email, clerkId } = req.body;
 
   try {
-    // Check if the user exists in your database
-    const user = await User.findOne({ email })
-    if (!user) {
-      return res.status(400).json({ Status: 0, Message: 'Invalid credentials' })
+    console.log('👤 Login attempt:', { email, clerkId });
+
+    if (!email || !clerkId) {
+      console.log('❌ Missing required fields');
+      return res.status(400).json({
+        status: 'error',
+        message: 'Email and clerkId are required'
+      });
     }
 
-    console.log('User found:', user, user.clerkId)
+    // Check if the user exists in your database
+    const user = await User.findOne({ email }).select('-password');
+    if (!user) {
+      console.log('❌ User not found:', email);
+      return res.status(404).json({
+        status: 'error',
+        message: 'User not found'
+      });
+    }
 
-    // Generate a sign-in token 
-    const jwtToken = await generateToken(res, user.clerkId)
-    console.log("Token....",jwtToken)
+    // Verify clerkId matches
+    if (user.clerkId !== clerkId) {
+      console.log('❌ ClerkId mismatch');
+      return res.status(401).json({
+        status: 'error',
+        message: 'Invalid credentials'
+      });
+    }
 
-    return res
-      .status(200)
-      .json({ Status: 1, Message: 'Login successful',user, token: jwtToken })
+    console.log('✅ User found:', {
+      id: user._id,
+      email: user.email,
+      clerkId: user.clerkId
+    });
+
+    // Generate JWT token
+    const token = await generateToken(res, user.clerkId);
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Login successful',
+      data: {
+        user: {
+          _id: user._id,
+          email: user.email,
+          username: user.username,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          imageUrl: user.imageUrl,
+          clerkId: user.clerkId
+        },
+        token
+      }
+    });
   } catch (error) {
-    console.error('Error during login:', error)
-    return res
-      .status(500)
-      .json({ Status: 0, Message: 'Something went wrong', error })
+    console.error('❌ Error during login:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+      error: error.message
+    });
   }
-}
+};
 
-module.exports = login
+module.exports = login;
