@@ -30,9 +30,34 @@ const PostSchema = new mongoose.Schema(
     filters: {
       type: String,
     },
-    tags: [{
+    category: {
       type: String,
-    }],
+      enum: [
+        'Technology',
+        'Programming & Development',
+        'Data Science & AI',
+        'Mathematics & Logic',
+        'Engineering',
+        'Science & Research',
+        'Entrepreneurship & Business',
+        'Finance & Investing',
+        'Career & Personal Development',
+        'Health & Wellness',
+        'Books & Literature',
+        'Psychology & Mindset',
+        'Art & Creativity',
+        'History & Philosophy',
+        'News & Current Affairs',
+        'Entertainment & Media',
+      ],
+      default: [],
+    },
+    tags: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
     location: {
       type: String,
     },

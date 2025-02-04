@@ -42,9 +42,28 @@ const User = new mongoose.Schema(
       default: false,
     },
     preferences: {
-      type: Array,
+      type: [String], // Array of Strings
+      enum: [
+        'Technology',
+        'Programming & Development',
+        'Data Science & AI',
+        'Mathematics & Logic',
+        'Engineering',
+        'Science & Research',
+        'Entrepreneurship & Business',
+        'Finance & Investing',
+        'Career & Personal Development',
+        'Health & Wellness',
+        'Books & Literature',
+        'Psychology & Mindset',
+        'Art & Creativity',
+        'History & Philosophy',
+        'News & Current Affairs',
+        'Entertainment & Media',
+      ],
       default: [],
     },
+
     followers: [
       {
         type: mongoose.Schema.Types.ObjectId,
