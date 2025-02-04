@@ -22,15 +22,19 @@ const PostSchema = new mongoose.Schema(
         ref: 'Comment', // Reference the Comment Schema
       },
     ],
-    category: {
-      type: [String],
-      enum: ['Technology', 'Finance', 'Education', 'Healthcare'],
-      required: true,
-    },
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
+    },
+    filters: {
+      type: String,
+    },
+    tags: [{
+      type: String,
+    }],
+    location: {
+      type: String,
     },
   },
   {

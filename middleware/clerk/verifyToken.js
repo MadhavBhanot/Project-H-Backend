@@ -2,49 +2,47 @@ const jwt = require('jsonwebtoken') // Import jsonwebtoken for decoding and veri
 const User = require('../../models/User')
 
 const verifyClerkToken = async (req, res, next) => {
-  const token =
-    req.headers.authorization?.split(' ')[1] || req.cookies?.__clerk_token
-  console.log('token', token)
-
-  if (!token) {
-    return res.status(401).json({ message: 'Unauthorized: Token is missing' })
-  }
-
   try {
-    // Decode the JWT without verifying it
-    const decoded = jwt.decode(token, { complete: true })
-
-    if (!decoded) {
-      console.log('Invalid token')
-    } else {
-      console.log('Decoded token:', decoded)
-      // Accessing the header and payload
-      console.log('Header:', decoded.header)
-      console.log('Payload:', decoded.payload)
+    // Get token from Authorization header
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.log('❌ No token provided or invalid format');
+      return res.status(401).json({ message: 'Unauthorized: Token is missing or invalid format' });
     }
-    req.userId = decoded.payload.userId
-    console.log('req.userId', req.userId)
 
-    // Fetch the user from the database based on `clerkId`
-    const user = await User.findOne({ clerkId: req.userId }).select('email username _id');
+    const token = authHeader.split(' ')[1];
+    console.log('🔑 Verifying token:', token.substring(0, 20) + '...');
+
+    // Verify the token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    console.log('✅ Token verified:', decoded);
+
+    // Get user from database
+    const user = await User.findOne({ clerkId: decoded.userId }).select('-password');
     if (!user) {
-        return res.status(404).json({
-            success: false,
-            message: "User not found.",
-        });
+      console.log('❌ User not found in database');
+      return res.status(404).json({ message: 'User not found' });
     }
 
-    // Attach the user details to the request object (excluding sensitive info)
-    req.user = {
-        userId: user._id,
-        username: user.username,
-        email: user.email
-    };
+    // Attach user to request object
+    req.user = user;
+    req.userId = decoded.userId;
+    console.log('👤 User attached to request:', {
+      userId: user._id,
+      clerkId: user.clerkId,
+      email: user.email
+    });
 
-
-    next()
+    next();
   } catch (error) {
-    console.error('Error decoding token:', error)
+    console.error('❌ Token verification error:', error.message);
+    if (error.name === 'JsonWebTokenError') {
+      return res.status(401).json({ message: 'Invalid token' });
+    }
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: 'Token expired' });
+    }
+    return res.status(500).json({ message: 'Internal server error during authentication' });
   }
 }
 

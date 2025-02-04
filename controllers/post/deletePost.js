@@ -4,17 +4,16 @@ const User = require('../../models/User')
 const deletePost = async (req, res) => {
   try {
     const { id } = req.params
+    const { userId } = req.body  // Get userId from request body
 
-    if (!id) {
+    if (!userId) {
       return res.status(400).json({
         success: false,
-        message: 'Post ID is required.',
+        message: 'User ID is required.',
       })
     }
 
-    // Find the post by ID
     const post = await Post.findById(id)
-
     if (!post) {
       return res.status(404).json({
         success: false,
@@ -22,42 +21,28 @@ const deletePost = async (req, res) => {
       })
     }
 
-    // Find the user who created the post
-    const user = await User.findById(post.author)
+    // Convert both IDs to string for comparison
+    const postAuthorId = post.author.toString()
+    const requestUserId = userId.toString()
 
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'Author not found.',
-      })
-    }
-
-    // Check if the authenticated user is the owner of the post
-    if (req.user.userId.toString() !== post.author.toString()) {
+    if (postAuthorId !== requestUserId) {
       return res.status(403).json({
         success: false,
-        message: 'You are not authorized to delete this post.',
+        message: 'Not authorized to delete this post.',
       })
     }
 
-    // Delete the post
     await Post.deleteOne({ _id: id })
-
-    // Remove the post from the user's `posts` array
-    user.posts = user.posts.filter((postId) => postId.toString() !== id)
-    await user.save()
 
     res.status(200).json({
       success: true,
       message: 'Post deleted successfully.',
-      post,
     })
   } catch (error) {
     console.error('Error in deletePost:', error)
     res.status(500).json({
       success: false,
-      message: 'An error occurred while deleting the post.',
-      error: error.message,
+      message: 'Server error',
     })
   }
 }
