@@ -10,12 +10,11 @@ const PostSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    likes: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-      },
-    ],
+    likes: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: 'User',
+      default: []  // Initialize as empty array
+    },
     comments: [
       {
         type: mongoose.Schema.Types.ObjectId,
