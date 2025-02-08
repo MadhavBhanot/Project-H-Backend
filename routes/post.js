@@ -10,7 +10,11 @@ const deletePost = require('../controllers/post/deletePost')
 // Unprotected routes
 postRouter.get('/all', require('../controllers/post/getAllPost.js')) // Get all posts
 postRouter.get('/user/:userId', getUserPosts) // Get posts for a specific user
-postRouter.get('/:id', checkObjectID, require('../controllers/post/getPostById.js')) // Get a specific post
+postRouter.get(
+  '/:id',
+  checkObjectID,
+  require('../controllers/post/getPostById.js'),
+) // Get a specific post
 postRouter.delete('/:id', checkObjectID, deletePost) // Delete a post with objectID validation
 
 // Protected routes
@@ -28,5 +32,10 @@ postRouter.post('/comment/:id', require('../controllers/post/addComment.js')) //
 
 // Post management
 postRouter.patch('/update/:id', require('../controllers/post/updatePost.js')) // Update a post
+
+postRouter.get(
+  '/feed/:id',
+  require('../controllers/post/getPersonalizedFeed.js'),
+) // Update a post
 
 module.exports = postRouter
