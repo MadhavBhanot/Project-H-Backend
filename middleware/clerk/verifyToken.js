@@ -13,8 +13,8 @@ const verifyClerkToken = async (req, res, next) => {
     const token = authHeader.split(' ')[1];
     console.log('🔑 Verifying token:', token.substring(0, 20) + '...');
 
-    // Verify the token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    // Verify the token using the same secret as login
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log('✅ Token verified:', decoded);
 
     // Get user from database

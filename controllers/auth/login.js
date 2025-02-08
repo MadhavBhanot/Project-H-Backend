@@ -1,49 +1,40 @@
-const generateToken = require('../../middleware/clerk/generateToken');
 const User = require('../../models/User');
+const jwt = require('jsonwebtoken');
 
 const login = async (req, res) => {
-  const { email, clerkId } = req.body;
-
   try {
-    console.log('👤 Login attempt:', { email, clerkId });
+    const { clerkId, email, username, firstName, lastName, imageUrl } = req.body;
 
-    if (!email || !clerkId) {
-      console.log('❌ Missing required fields');
-      return res.status(400).json({
-        status: 'error',
-        message: 'Email and clerkId are required'
-      });
-    }
+    console.log('👤 Login attempt:', { clerkId, email });
 
-    // Check if the user exists in your database
-    const user = await User.findOne({ email }).select('-password');
+    // Try to find existing user
+    let user = await User.findOne({ clerkId });
+
+    // If user doesn't exist, create a new one
     if (!user) {
-      console.log('❌ User not found:', email);
-      return res.status(404).json({
-        status: 'error',
-        message: 'User not found'
+      console.log('🆕 Creating new user:', { clerkId, email });
+      user = new User({
+        clerkId,
+        email,
+        username: username || email.split('@')[0],
+        firstName,
+        lastName,
+        profileImg: imageUrl
       });
+      await user.save();
+      console.log('✅ New user created:', user._id);
     }
-
-    // Verify clerkId matches
-    if (user.clerkId !== clerkId) {
-      console.log('❌ ClerkId mismatch');
-      return res.status(401).json({
-        status: 'error',
-        message: 'Invalid credentials'
-      });
-    }
-
-    console.log('✅ User found:', {
-      id: user._id,
-      email: user.email,
-      clerkId: user.clerkId
-    });
 
     // Generate JWT token
-    const token = await generateToken(res, user.clerkId);
+    const token = jwt.sign(
+      { userId: user.clerkId },
+      process.env.JWT_SECRET,
+      { expiresIn: '30d' }
+    );
 
-    return res.status(200).json({
+    console.log('🔑 Login successful for user:', user._id);
+
+    res.status(200).json({
       status: 'success',
       message: 'Login successful',
       data: {
@@ -51,19 +42,17 @@ const login = async (req, res) => {
           _id: user._id,
           email: user.email,
           username: user.username,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          imageUrl: user.imageUrl,
+          profileImg: user.profileImg,
           clerkId: user.clerkId
         },
         token
       }
     });
   } catch (error) {
-    console.error('❌ Error during login:', error);
-    return res.status(500).json({
+    console.error('❌ Login error:', error);
+    res.status(500).json({
       status: 'error',
-      message: 'Internal server error',
+      message: 'Login failed',
       error: error.message
     });
   }

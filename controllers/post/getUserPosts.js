@@ -3,35 +3,62 @@ const User = require('../../models/User');
 
 const getUserPosts = async (req, res) => {
   try {
-    const { userId } = req.params; // This will be MongoDB ID
-    console.log('\n🔍 Debug: Fetching posts');
-    console.log('👤 Requested MongoDB userId:', userId);
+    const { userId } = req.params;
+    console.log('🔍 Fetching posts for user:', userId);
 
-    // Find all posts in the database to debug
-    const allPosts = await Post.find({});
-    console.log('\n📊 All Posts in Database:', allPosts.length);
-    allPosts.forEach((post, index) => {
-      console.log(`\nPost ${index + 1}:`);
-      console.log('ID:', post._id);
-      console.log('Author:', post.author);
-      console.log('Caption:', post.caption);
-    });
+    // Find the user first
+    const user = await User.findById(userId);
+    if (!user) {
+      console.log('❌ User not found:', userId);
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
 
-    // Find posts by MongoDB ID
-    const userPosts = await Post.find({ author: userId })
+    // Find all posts by this user
+    const posts = await Post.find({ author: userId })
+      .populate({
+        path: 'author',
+        select: '_id username profileImg'
+      })
       .sort({ createdAt: -1 });
 
-    console.log('\n🎯 Posts found for MongoDB user:', userPosts.length);
-    console.log('Posts:', userPosts);
+    console.log(`✅ Found ${posts.length} posts for user:`, userId);
 
-    res.status(200).json({
+    // Return empty array if no posts found
+    if (!posts || posts.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: 'No posts found',
+        posts: []
+      });
+    }
+
+    // Transform posts to include author details
+    const transformedPosts = posts.map(post => ({
+      _id: post._id,
+      content: post.content,
+      image: post.image,
+      createdAt: post.createdAt,
+      likes: post.likes || [],
+      comments: post.comments || [],
+      author: post.author ? {
+        _id: post.author._id,
+        username: post.author.username,
+        imageUrl: post.author.profileImg || ''
+      } : null
+    }));
+
+    return res.status(200).json({
       success: true,
       message: 'Posts fetched successfully',
-      posts: userPosts
+      posts: transformedPosts
     });
+
   } catch (error) {
     console.error('❌ Error in getUserPosts:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Error fetching user posts',
       error: error.message

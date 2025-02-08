@@ -2,84 +2,59 @@ const Post = require('../../models/Post')
 const User = require('../../models/User')
 
 const likeOrUnlikePost = async (req, res) => {
-  console.log('Hit')
   try {
-    const { id } = req.params
+    const postId = req.params.id
+    const userId = req.user._id // Get MongoDB user ID directly from req.user
 
-    if (!id) {
-      return res.status(400).json({
-        success: false,
-        message: 'Post ID is required.',
-      })
-    }
+    console.log('👍 Like/Unlike request:', { postId, userId })
 
-    // Find the post by ID
-    const post = await Post.findById(id)
-
+    // Find the post and ensure likes array exists
+    const post = await Post.findById(postId)
     if (!post) {
       return res.status(404).json({
         success: false,
-        message: 'Post not found.',
+        message: 'Post not found'
       })
     }
 
-    const userId = req.userId
-
-    if (!userId) {
-      return res.status(401).json({
-        success: false,
-        message: 'User ID is required.',
-      })
+    // Ensure likes array exists
+    if (!Array.isArray(post.likes)) {
+      post.likes = []
+      await Post.updateOne({ _id: postId }, { $set: { likes: [] } })
     }
 
-    // Find the user by ID
-    const user = await User.findOne({ clerkId: userId })
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found.',
-      })
-    }
-
-    // Check if the user already liked the post
-    const hasLiked = post.likes.includes(user._id)
+    // Convert user._id to string for comparison
+    const userIdStr = userId.toString()
+    const hasLiked = post.likes.some(id => id.toString() === userIdStr)
 
     if (hasLiked) {
-      // Unlike the post
-      post.likes = post.likes.filter(
-        (like) => like.toString() !== user._id.toString(),
-      )
-      user.likedPosts = user.likedPosts.filter(
-        (postId) => postId.toString() !== id.toString(),
-      )
-
-      await user.save()
-      await post.save()
-
-      return res.status(200).json({
-        success: true,
-        message: 'Post unliked successfully.',
-      })
+      // Unlike: Remove user's ID from likes array
+      post.likes = post.likes.filter(id => id.toString() !== userIdStr)
+      console.log('👎 User unliked post')
     } else {
-      // Like the post
-      post.likes.push(user._id)
-      user.likedPosts.push(id)
-
-      await user.save()
-      await post.save()
-
-      return res.status(200).json({
-        success: true,
-        message: 'Post liked successfully.',
-      })
+      // Like: Add user's ID to likes array
+      post.likes.push(userId)
+      console.log('👍 User liked post')
     }
+
+    // Save the updated post
+    await post.save()
+
+    // Return updated post data
+    res.status(200).json({
+      success: true,
+      message: hasLiked ? 'Post unliked successfully' : 'Post liked successfully',
+      liked: !hasLiked,
+      likesCount: post.likes.length,
+      userId: userIdStr // Include the user's MongoDB ID in the response
+    })
+
   } catch (error) {
     console.error('Error in liking or unliking the post:', error)
     res.status(500).json({
       success: false,
       message: 'An error occurred while liking or unliking the post.',
-      error: error.message,
+      error: error.message
     })
   }
 }
