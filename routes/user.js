@@ -19,5 +19,9 @@ userRouter.get(
   require('../controllers/user/getFollowingList'),
 ) // Get User's Following List
 userRouter.patch('/:id', require('../controllers/user/updateUser')) // Update User's Profile
+userRouter.get(
+  '/discover/:id',
+  require('../controllers/user/discoverPeople.js'),
+)
 
 module.exports = userRouter
