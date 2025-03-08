@@ -28,4 +28,4 @@ const discoverPeople = async (req, res) => {
   }
 }
 
-module.exports = { discoverPeople }
+module.exports =  discoverPeople 
