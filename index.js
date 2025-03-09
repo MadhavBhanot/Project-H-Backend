@@ -13,6 +13,20 @@ const { verifyClerkToken } = require('./middleware/clerk/verifyToken')
 
 const app = express()
 
+// Basic request logging - before any middleware
+app.use((req, res, next) => {
+  console.log('\n🔔 INCOMING REQUEST:', {
+    timestamp: new Date().toISOString(),
+    method: req.method,
+    url: req.url,
+    headers: {
+      'content-type': req.headers['content-type'],
+      authorization: req.headers.authorization ? 'Bearer ...' : 'None'
+    }
+  })
+  next()
+})
+
 // Enable trust proxy
 app.set('trust proxy', 1);
 
