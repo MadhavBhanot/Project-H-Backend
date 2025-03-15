@@ -3,12 +3,16 @@ const User = require('../../models/User')
 const discoverPeople = async (req, res) => {
   try {
     console.log('\n🔍 DISCOVER PEOPLE ENDPOINT HIT')
+    
+    // Get the current user's ID from the request
+    const currentUserId = req.userId
+    console.log('👤 Current user ID:', currentUserId)
 
     // Debug: Log the MongoDB connection state
     console.log('MongoDB connection state:', User.db.readyState)
 
-    // Get all users from MongoDB
-    const allUsers = await User.find()
+    // Get all users except the current user
+    const allUsers = await User.find({ clerkId: { $ne: currentUserId } })
     console.log('📊 Raw MongoDB users:', allUsers)
 
     // Basic transformation
