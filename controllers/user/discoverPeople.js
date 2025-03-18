@@ -2,30 +2,42 @@ const User = require('../../models/User')
 
 const discoverPeople = async (req, res) => {
   try {
-    const { id: userId } = req.params // Get userId from request params
-    const user = await User.findById(userId)
+    console.log('\n🔍 DISCOVER PEOPLE ENDPOINT HIT')
+    
+    // Get the current user's ID from the request
+    const currentUserId = req.userId
+    console.log('👤 Current user ID:', currentUserId)
 
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' })
-    }
+    // Debug: Log the MongoDB connection state
+    console.log('MongoDB connection state:', User.db.readyState)
 
-    // Get the user's interests
-    const userInterests = user.interests || []
+    // Get all users except the current user
+    const allUsers = await User.find({ clerkId: { $ne: currentUserId } })
+    console.log('📊 Raw MongoDB users:', allUsers)
 
-    // Find users with at least one matching interest, exclude current user & already-followed users
-    const suggestedUsers = await User.find({
-      _id: { $ne: userId, $nin: user.following }, // Exclude self and already followed users
-      interests: { $in: userInterests }, // Find users with matching interests
-      isPrivateAccount: false, // Only suggest public accounts
-    })
-      .select('firstName lastName username profileImg bio interests') // Select relevant fields
-      .limit(10) // Limit results to 10 users
+    // Basic transformation
+    const suggestedUsers = allUsers.map(user => ({
+      _id: user._id,
+      username: user.username,
+      profileImg: user.profileImg,
+      bio: user.bio || `Hi, I'm ${user.username}!`,
+      email: user.email
+    }))
 
-    res.status(200).json(suggestedUsers)
+    console.log('✅ Found users:', suggestedUsers.map(u => ({
+      id: u._id,
+      username: u.username,
+      email: u.email
+    })))
+
+    return res.status(200).json(suggestedUsers)
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: 'Server error' })
+    console.error('❌ Error in discoverPeople:', error)
+    return res.status(500).json({ 
+      message: 'Server error',
+      error: error.message
+    })
   }
 }
 
-module.exports = { discoverPeople }
+module.exports = discoverPeople 

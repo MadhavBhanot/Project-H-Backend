@@ -49,7 +49,16 @@ const PostSchema = new mongoose.Schema(
         'News & Current Affairs',
         'Entertainment & Media',
       ],
-      default: [],
+      default: 'Technology',
+      required: true,
+      set: function(v) {
+        // Handle array input
+        if (Array.isArray(v)) {
+          return v.length > 0 ? v[0].toString() : 'Technology';
+        }
+        // Handle string input
+        return v ? v.toString() : 'Technology';
+      }
     },
     tags: [
       {
