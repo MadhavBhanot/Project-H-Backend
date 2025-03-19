@@ -15,10 +15,7 @@ const applyForAJob = async (req, res) => {
       return res.status(404).json({ message: 'Job not found', success: false })
     }
 
-    console.log('Job posted by', job.postedBy)
-    console.log('Job posted by', req.user._id)
     if (job.postedBy.toString() === req.user._id.toString()) {
-      console.log('HEre')
       return res
         .status(400)
         .json({ message: 'You cannot apply for your own job', success: false })

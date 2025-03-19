@@ -15,5 +15,9 @@ jobRouter.get('/:id', require('../controllers/job/getJobById'))
 jobRouter.delete('/:id', require('../controllers/job/deleteJob'))
 jobRouter.patch('/:id', require('../controllers/job/updateJob'))
 jobRouter.post('/:id', require('../controllers/job/applyForAJob'))
+jobRouter.get(
+  '/applicants/:id',
+  require('../controllers/job/getAllApplicantsForAJob.js'),
+)
 
 module.exports = jobRouter
