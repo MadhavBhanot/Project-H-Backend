@@ -1,11 +1,28 @@
-// Get a job by id
 const Job = require('../../models/Job')
-const getJobByIdHelper = require('../../utils/job/getJobByIdHelper')
 
-async function getJobById(req, res) {
-    const data = await getJobByIdHelper(req.params.id)
-    if (!data) return res.status(404).json({ message: "Job Not Found", data })
-    return res.status(200).json({ message: "Job Retrieved Successfully", data })
+const getJobById = async (req, res) => {
+  try {
+    const { id } = req.params
+    if (!id) {
+      return res
+        .status(404)
+        .json({ message: 'Job Id is Required', success: false })
+    }
+
+    const job = await Job.findById(id).populate('applicants postedBy')
+    if (!job) {
+      return res.status(404).json({ message: 'Job Not Found', success: false })
+    }
+
+    return res
+      .status(200)
+      .json({ message: 'Job retrieved successfully', success: true, job })
+  } catch (err) {
+    console.log(err)
+    return res
+      .status(500)
+      .json({ message: 'Internal server error', success: false })
+  }
 }
 
-module.exports = getJobById;
+module.exports = getJobById
