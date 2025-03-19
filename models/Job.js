@@ -3,14 +3,41 @@ const mongoose = require('mongoose')
 const jobSchema = new mongoose.Schema(
   {
     postedBy: {
-      type: mongoose.Schema.Types.ObjectId, // Reference to the User who posted the job
-      ref: 'User', // Refers to the User schema
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
+    },
+    company: {
+      type: String,
+      required: true,
+    },
+    position: {
+      type: String,
+      required: true,
+    },
+    type: {
+      type: String,
+      required: true,
+      enum: ['full-time', 'part-time', 'contract', 'internship'],
+    },
+    location: {
+      type: String,
+      required: true,
+      enum: ['remote', 'on-site', 'hybrid'],
+    },
+    salary: {
+      type: Number,
+      min: 0,
+      default: 0,
     },
     description: {
       type: String,
       required: true,
       trim: true, // Removes extra spaces
+    },
+    duration: {
+      type: String,
+      required: true,
     },
     minReq: {
       type: String,

@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.use('/auth', require('../routes/auth'))
 router.use('/posts', require('../routes/post'))
-// router.use('/jobs', require('../routes/job'))
+router.use('/jobs', require('../routes/job'))
 router.use('/users', require('../routes/user'))
 router.use('/comments', require('../routes/comment'))
 router.use('/clerk', require('../routes/clerk'))

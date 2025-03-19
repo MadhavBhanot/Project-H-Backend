@@ -1,32 +1,101 @@
-// Create a job
 const Job = require('../../models/Job')
 const User = require('../../models/User')
-const validateCreateJob = require('../../utils/job/createJobValidation')
 
-async function createJob(req, res) {
-    const { error } = validateCreateJob(req.body);
-    if (error) return res.status(400).json({ error: error.details[0].message });
-    if (!req.user.isVerified) return res.status(400).json({ message: "Not Verified To Post a Job" })
-    const data = {
-        postedBy: req.user.userId,
-        description: req.body.description,
-        minReq: req.body.minReq,
-        category: req.body.category,
-        imageURL: req.file?.filename || null,
-    };
-    const job = await createJobHelper(data);
-    await addPostedJob(req.user.userId, job._id)
-    return res.status(200).json({ message: "Job Created Successfully" })
+const createJob = async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(404).json({ message: 'User Not Found', success: false })
+    }
+
+    // Uncomment for production to check if the user is verified
+    // if (!req.user.isVerified) {
+    //   return res.status(400).json({ message: 'User Not Verified', success: false })
+    // }
+
+    const {
+      position,
+      type,
+      location,
+      description,
+      salary,
+      duration,
+      minReq,
+      imageURL,
+      category,
+      company,
+    } = req.body
+
+    // Validate required fields
+    if (
+      !position ||
+      !type ||
+      !location ||
+      !description ||
+      !duration ||
+      !minReq ||
+      !category ||
+      !company
+    ) {
+      return res
+        .status(400)
+        .json({ message: 'All required fields must be filled', success: false })
+    }
+
+    // Ensure `type` and `location` are valid enums
+    const validTypes = ['full-time', 'part-time', 'contract', 'internship']
+    const validLocations = ['remote', 'on-site', 'hybrid']
+    const validCategories = ['Technology', 'Finance', 'Education', 'Healthcare']
+
+    if (!validTypes.includes(type)) {
+      return res
+        .status(400)
+        .json({ message: 'Invalid job type', success: false })
+    }
+
+    if (!validLocations.includes(location)) {
+      return res
+        .status(400)
+        .json({ message: 'Invalid job location', success: false })
+    }
+
+    if (!validCategories.includes(category)) {
+      return res
+        .status(400)
+        .json({ message: 'Invalid job category', success: false })
+    }
+
+    // Create a new job
+    const newJob = new Job({
+      postedBy: req.user._id,
+      position,
+      type,
+      location,
+      description,
+      salary: salary || 0, // Default value if salary is not provided
+      duration,
+      minReq,
+      imageURL: imageURL || null, // Default to null if not provided
+      category,
+      company,
+    })
+
+    req.user.postedJobs.push(newJob._id)
+
+    // Save job to the database
+    await newJob.save()
+    await req.user.save()
+
+    return res.status(201).json({
+      message: 'Job created successfully',
+      success: true,
+      job: newJob,
+    })
+  } catch (error) {
+    console.error('Error creating job:', error)
+    return res
+      .status(500)
+      .json({ message: 'Internal Server Error', success: false })
+  }
 }
 
-async function createJobHelper(data) {
-    return await Job.create(data)
-}
-
-async function addPostedJob(userId, jobId) {
-    let user = await User.findById(userId)
-    user.postedJobs.push(jobId)
-    await user.save()
-}
-
-module.exports = createJob;
+module.exports = createJob
