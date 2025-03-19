@@ -19,5 +19,9 @@ jobRouter.get(
   '/applicants/:id',
   require('../controllers/job/getAllApplicantsForAJob.js'),
 )
+jobRouter.patch(
+  '/toggleSave/:id',
+  require('../controllers/job/saveOrUnsaveAJob.js'),
+)
 
 module.exports = jobRouter
