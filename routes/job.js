@@ -4,6 +4,9 @@ const { verifyClerkToken } = require('../middleware/clerk/verifyToken.js')
 const upload = require('../utils/main/imageUploading')
 
 jobRouter.use(verifyClerkToken)
+
+jobRouter.get('/search', require('../controllers/job/searchJobWithTag'))
+
 jobRouter.post(
   '/create-job',
   upload.single('imageURL'),
