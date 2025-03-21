@@ -7,7 +7,10 @@ const createPost = require('../controllers/post/createPost')
 const getUserPosts = require('../controllers/post/getUserPosts')
 const deletePost = require('../controllers/post/deletePost')
 
-// Unprotected routes
+postRouter.use(verifyClerkToken)
+
+postRouter.get('/search', require('../controllers/post/getPostsByCategory.js'))
+
 postRouter.get('/all', require('../controllers/post/getAllPost.js')) // Get all posts
 postRouter.get('/user/:userId', getUserPosts) // Get posts for a specific user
 postRouter.get(
@@ -18,7 +21,6 @@ postRouter.get(
 postRouter.delete('/:id', checkObjectID, deletePost) // Delete a post with objectID validation
 
 // Protected routes
-postRouter.use(verifyClerkToken)
 
 // Post creation
 postRouter.post('/create', upload.single('image'), createPost) // Create a new post
