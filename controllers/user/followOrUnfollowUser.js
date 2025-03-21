@@ -10,7 +10,7 @@ const followUnfollowUser = async (req, res) => {
       return res.status(404).json({ Status: 0, Message: 'User Id is Required' })
     }
 
-    const currentUserId = req.user.userId // The user performing the action
+    const currentUserId = req.user._id // The user performing the action
     if (!currentUserId) {
       return res
         .status(404)
