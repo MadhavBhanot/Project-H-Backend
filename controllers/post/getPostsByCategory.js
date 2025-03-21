@@ -1,5 +1,4 @@
-import Post from '../../models/Post.js'
-
+const Post = require('../../models/Post.js')
 const getPostsByCategory = async (req, res) => {
   try {
     const { category } = req.query
@@ -51,4 +50,4 @@ const getPostsByCategory = async (req, res) => {
   }
 }
 
-export default getPostsByCategory
+module.exports = getPostsByCategory
