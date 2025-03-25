@@ -21,8 +21,6 @@ const getHomeFeed = async (req, res) => {
       .populate('author', 'username profileImg')
       .populate('comments')
       .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(pageLimit)
       .lean()
 
     // If not enough posts, fetch from preferences
@@ -31,14 +29,27 @@ const getHomeFeed = async (req, res) => {
         .populate('author', 'username profileImg')
         .populate('comments')
         .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(pageLimit - posts.length)
         .lean()
 
       posts = [...posts, ...extraPosts]
     }
 
-    res.status(200).json({ feed: posts, currentPage: page })
+    // Ensure one author does not dominate the feed
+    let finalFeed = []
+    let authorLastPost = new Map()
+
+    for (let post of posts) {
+      if (
+        !authorLastPost.has(post.author._id) ||
+        finalFeed.length - authorLastPost.get(post.author._id) > 3
+      ) {
+        finalFeed.push(post)
+        authorLastPost.set(post.author._id, finalFeed.length)
+      }
+      if (finalFeed.length >= pageLimit) break
+    }
+
+    res.status(200).json({ feed: finalFeed, currentPage: page })
   } catch (error) {
     console.error('Error fetching home feed:', error)
     res.status(500).json({ error: 'Internal server error' })
@@ -69,7 +80,7 @@ const getExploreFeed = async (req, res) => {
       )
     }
 
-    // Fetch posts based on engagement (likes, tags, preferences)
+    // Fetch posts based on engagement (likes, category, preferences)
     let posts = await Post.find({
       $or: [
         { tags: { $in: Array.from(likedTags) } },
@@ -79,11 +90,24 @@ const getExploreFeed = async (req, res) => {
       .populate('author', 'username profileImg')
       .populate('comments')
       .sort({ likes: -1, comments: -1, createdAt: -1 })
-      .skip(skip)
-      .limit(pageLimit)
       .lean()
 
-    res.status(200).json({ feed: posts, currentPage: page })
+    // Ensure one author does not dominate the feed
+    let finalFeed = []
+    let authorLastPost = new Map()
+
+    for (let post of posts) {
+      if (
+        !authorLastPost.has(post.author._id) ||
+        finalFeed.length - authorLastPost.get(post.author._id) > 3
+      ) {
+        finalFeed.push(post)
+        authorLastPost.set(post.author._id, finalFeed.length)
+      }
+      if (finalFeed.length >= pageLimit) break
+    }
+
+    res.status(200).json({ feed: finalFeed, currentPage: page })
   } catch (error) {
     console.error('Error fetching explore feed:', error)
     res.status(500).json({ error: 'Internal server error' })
