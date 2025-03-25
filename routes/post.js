@@ -6,6 +6,10 @@ const { verifyClerkToken } = require('../middleware/clerk/verifyToken.js')
 const createPost = require('../controllers/post/createPost')
 const getUserPosts = require('../controllers/post/getUserPosts')
 const deletePost = require('../controllers/post/deletePost')
+const {
+  getHomeFeed,
+  getExploreFeed,
+} = require('../controllers/post/getPersonalizedFeed.js')
 
 postRouter.use(verifyClerkToken)
 
@@ -35,9 +39,7 @@ postRouter.post('/comment/:id', require('../controllers/post/addComment.js')) //
 // Post management
 postRouter.patch('/update/:id', require('../controllers/post/updatePost.js')) // Update a post
 
-postRouter.get(
-  '/feed/:id',
-  require('../controllers/post/getPersonalizedFeed.js'),
-) // Update a post
+postRouter.get('/feed/home/:id', getHomeFeed)
+postRouter.get('/feed/explore/:id', getExploreFeed)
 
 module.exports = postRouter
