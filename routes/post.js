@@ -24,8 +24,6 @@ postRouter.get(
 ) // Get a specific post
 postRouter.delete('/:id', checkObjectID, deletePost) // Delete a post with objectID validation
 
-// Protected routes
-
 // Post creation
 postRouter.post('/create', upload.single('image'), createPost) // Create a new post
 

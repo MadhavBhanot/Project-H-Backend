@@ -116,6 +116,10 @@ const UserSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    resume: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true }, // Automatically adds createdAt & updatedAt fields
 )
