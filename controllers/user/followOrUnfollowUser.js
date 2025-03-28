@@ -20,15 +20,15 @@ const followUnfollowUser = async (req, res) => {
     const user = await User.findById(id)
     const currentUser = await User.findById(currentUserId)
 
-    if (!user || !currentUser) {
-      return res.status(404).json({ Status: 0, Message: 'User not found' })
+    if (!user || !currentUser || user.blockedUsers.includes(currentUserId)) {
+      return res.status(404).json({ message: 'User not found', success: false })
     }
 
     // Check if the user is trying to follow itself
     if (user._id.equals(currentUser._id)) {
       return res
         .status(400)
-        .json({ Status: 0, Message: 'Cannot follow yourself' })
+        .json({ message: 'Cannot follow yourself', success: false })
     }
 
     // Check if currentUser is already following the user
@@ -42,7 +42,7 @@ const followUnfollowUser = async (req, res) => {
 
       return res
         .status(200)
-        .json({ Status: 1, Message: 'User unfollowed successfully' })
+        .json({ message: 'User unfollowed successfully', success: true })
     } else {
       // Follow the user
       user.followers.push(currentUser._id)
@@ -53,12 +53,12 @@ const followUnfollowUser = async (req, res) => {
 
       return res
         .status(200)
-        .json({ Status: 1, Message: 'User followed successfully' })
+        .json({ message: 'User followed successfully', success: false })
     }
   } catch (error) {
     return res
       .status(500)
-      .json({ Status: 0, Message: 'Error processing request', error })
+      .json({ message: 'Internal server error', success: false })
   }
 }
 
