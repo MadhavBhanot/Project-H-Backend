@@ -23,5 +23,6 @@ userRouter.get(
   '/discover/:id',
   require('../controllers/user/discoverPeople.js'),
 )
+userRouter.patch('/', require('../controllers/user/updatePrivacy.js'))
 
 module.exports = userRouter
