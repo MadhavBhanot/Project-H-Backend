@@ -35,12 +35,14 @@ const getPostsByCategory = async (req, res) => {
 
     const posts = await Post.find({
       category: { $regex: new RegExp(category, 'i') },
-    })
+    }).populate('author', 'username bio')
+
+    const publicPosts = posts.filter((post) => !post.author.isPrivateAccount)
 
     return res.status(200).json({
       message: 'Posts retrieved successfully',
       success: true,
-      posts,
+      publicPosts,
     })
   } catch (error) {
     console.error('Error searching jobs:', error)
