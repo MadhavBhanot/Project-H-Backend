@@ -16,9 +16,9 @@ const interactWithStory = async (req, res) => {
     });
 
     // Find the current user using clerkId
-    const user = await User.findOne({ clerkId: userId });
+    const user = await User.findById(userId);
     if (!user) {
-      console.log('❌ User not found for clerkId:', userId);
+      console.log('❌ User not found for MongoDB ID:', userId);
       return res.status(404).json({
         success: false,
         message: 'User not found'

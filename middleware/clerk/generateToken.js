@@ -12,7 +12,7 @@ const generateToken = (res, userId) => {
     // Generate the JWT token
     const jwtToken = jwt.sign(
       { userId }, // Payload with the user ID
-      process.env.JWT_SECRET_KEY, // Secret key from the environment variable
+      process.env.JWT_SECRET, // Use JWT_SECRET to match the socket verification
       { expiresIn: '100h' } // Token expiration time
     );
 

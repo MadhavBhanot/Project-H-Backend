@@ -17,10 +17,10 @@ const deleteStory = async (req, res) => {
       console.log('ℹ️ No direct MongoDB ID provided, using Clerk ID:', clerkId);
       
       // Find the MongoDB user associated with this Clerk ID
-      user = await User.findOne({ clerkId });
+      user = await User.findById(clerkId);
       
       if (!user) {
-        console.log('❌ MongoDB user not found for Clerk ID:', clerkId);
+        console.log('❌ MongoDB user not found for ID:', clerkId);
         return res.status(404).json({
           success: false,
           message: 'User not found'

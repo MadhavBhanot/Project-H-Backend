@@ -4,11 +4,19 @@ const cors = require('cors')
 const helmet = require('helmet')
 const rateLimit = require('express-rate-limit')
 const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
+const morgan = require('morgan')
+const hpp = require('hpp')
+const xss = require('xss-clean')
+const mongoSanitize = require('express-mongo-sanitize')
+const http = require('http')
+const setupSocketServer = require('./socket/setupSocket')
 
 const { connectDB } = require('./config/configDB')
 const logger = require('./utils/main/logger')
 const apiRoutes = require('./routes/api')
 const storyRouter = require('./routes/story')
+const chatRouter = require('./routes/chat')
 const { webhookHandler } = require('./middleware/clerk/webhook')
 const { verifyClerkToken } = require('./middleware/clerk/verifyToken')
 
@@ -41,8 +49,27 @@ const limiter = rateLimit({
 // Security Middlwares
 app.use(helmet())
 app.use(cors({
-  origin: process.env.FRONTEND_URL || ['http://localhost:19000', 'http://localhost:19001', 'http://10.0.2.2:19000', 'http://10.0.2.2:19001'],
-  credentials: true
+  origin: [
+    'http://localhost:19000', 
+    'http://localhost:19001',
+    'http://10.0.2.2:19000', 
+    'http://10.0.2.2:19001',
+    'http://192.168.1.7:8081',
+    'http://192.168.1.7:19000',
+    'http://192.168.1.7:19001',
+    'exp://192.168.1.40:8081',
+    'exp://192.168.1.7:19000',
+    'exp://192.168.1.7:19001',
+    'http://192.168.1.40:5001',
+    'exp://192.168.1.40:5001',
+    'http://192.168.1.40:19000',
+    'exp://192.168.1.40:19000',
+    'http://192.168.1.40:19001',
+    'exp://192.168.1.40:19001'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }))
 app.use(limiter)
 
@@ -92,6 +119,9 @@ app.use('/api', apiRoutes)
 // Mount story routes directly under /api/stories
 app.use('/api/stories', storyRouter)
 
+// Mount chat routes under /api/chat
+app.use('/api/chat', chatRouter)
+
 // Route to check the user profile
 app.get('/api/profile', verifyClerkToken, (req, res) => {
   res.json({
@@ -99,6 +129,21 @@ app.get('/api/profile', verifyClerkToken, (req, res) => {
     userId: req.userId,
   })
 })
+
+// Health check endpoint (no auth required)
+app.get('/api/health', (req, res) => {
+  res.set('Content-Type', 'application/json');
+  res.status(200).json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    app: 'Project-H-Backend',
+    uptime: Math.floor(process.uptime()),
+    database: {
+      connected: mongoose.connection.readyState === 1,
+      state: mongoose.connection.readyState
+    }
+  });
+});
 
 // Clerk Webhook endpoint (only apply webhook handler here)
 app.post('/api/webhook', webhookHandler)
@@ -111,11 +156,26 @@ app.all('*', (req, res) => {
     .json({ message: `${req.originalUrl} is not found on this server` })
 })
 
+// Create HTTP server
+const server = http.createServer(app)
+
+// Initialize Socket.io
+const io = setupSocketServer(server)
+
+// Set global variable for socket io
+app.set('io', io)
+
 // Start server
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`
 🚀 Server is running on http://localhost:${PORT}
 📍 API endpoint: http://localhost:${PORT}/api
 🔒 Environment: ${process.env.NODE_ENV || 'development'}
   `);
+})
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err) => {
+  console.error('❌ UNHANDLED REJECTION:', err);
+  server.close(() => process.exit(1));
 });
