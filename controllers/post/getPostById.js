@@ -39,11 +39,21 @@ const getPostById = async (req, res) => {
       ])
       .select('author comments')
 
-    // Check if post exists and correctly accessing
-    if (!post || post.author._id.toString() !== req.user._id.toString()) {
+    // Check if post exists
+    if (!post) {
       return res.status(404).json({
         success: false,
         message: 'Post not found',
+      })
+    }
+
+    if (
+      post.author.isPrivateAccount &&
+      !post.author.followers.includes(req.user._id)
+    ) {
+      return res.status(200).json({
+        success: false,
+        message: 'Cannot access post of a private account without following',
       })
     }
 
