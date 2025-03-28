@@ -20,11 +20,14 @@ const searchJobWithTag = async (req, res) => {
     const jobs = await Job.find({
       category: { $regex: new RegExp(category, 'i') },
     })
+    const filteredJobs = jobs.filter(
+      (job) => !job.postedBy.blockedUsers.includes(req.user._id),
+    )
 
     return res.status(200).json({
       message: 'Jobs retrieved successfully',
       success: true,
-      jobs,
+      filteredJobs,
     })
   } catch (error) {
     console.error('Error searching jobs:', error)

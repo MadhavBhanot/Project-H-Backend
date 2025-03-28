@@ -20,7 +20,7 @@ const saveOrUnsaveAJob = async (req, res) => {
 
     // Check if the job exists
     const job = await Job.findById(id)
-    if (!job) {
+    if (!job || job.postedBy.blockedUsers.includes(req.user._id)) {
       return res.status(404).json({ message: 'Job not found', success: false })
     }
 

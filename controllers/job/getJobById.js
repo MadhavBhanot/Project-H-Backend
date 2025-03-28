@@ -10,7 +10,7 @@ const getJobById = async (req, res) => {
     }
 
     const job = await Job.findById(id).populate('applicants postedBy')
-    if (!job) {
+    if (!job || job.postedBy.blockedUsers.includes(req.user._id)) {
       return res.status(404).json({ message: 'Job Not Found', success: false })
     }
 
