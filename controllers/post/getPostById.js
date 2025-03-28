@@ -39,8 +39,8 @@ const getPostById = async (req, res) => {
       ])
       .select('author comments')
 
-    // Check if post exists
-    if (!post) {
+    // Check if post exists and correctly accessing
+    if (!post || post.author._id.toString() !== req.user._id.toString()) {
       return res.status(404).json({
         success: false,
         message: 'Post not found',
