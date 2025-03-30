@@ -82,7 +82,13 @@ app.use(bodyParser.json({ limit: '50mb' }))
 app.use(logger) // Logging Requests To Access Log
 
 // Images Middleware
-app.use(express.static(path.resolve('./public')))
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+
+// Make sure the route is also available through the /api prefix 
+app.use('/api/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // Log all API requests for debugging
 app.use((req, res, next) => {

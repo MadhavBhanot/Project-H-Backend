@@ -43,7 +43,8 @@
     "nodemailer": "^6.9.16",
     "socket.io": "^4.8.1",
     "svix": "^1.45.1",
-    "xss-clean": "^0.1.4"
+    "xss-clean": "^0.1.4",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
