@@ -124,6 +124,16 @@ const UserSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    resume: {
+      type: String,
+      default: null,
+    },
+    blockedUsers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   { timestamps: true }, // Automatically adds createdAt & updatedAt fields
 )

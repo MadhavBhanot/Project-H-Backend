@@ -47,6 +47,16 @@ const getPostById = async (req, res) => {
       })
     }
 
+    if (
+      post.author.isPrivateAccount &&
+      !post.author.followers.includes(req.user._id)
+    ) {
+      return res.status(200).json({
+        success: false,
+        message: 'Cannot access post of a private account without following',
+      })
+    }
+
     // Respond with the post data
     res.status(200).json({
       success: true,

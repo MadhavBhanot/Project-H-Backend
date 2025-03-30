@@ -6,27 +6,36 @@ const getFollowers = async (req, res) => {
     const { id } = req.params
     // Check if id Provided
     if (!id) {
-      return res.status(404).json({ Status: 0, Message: 'User Id is Required' })
+      return res
+        .status(404)
+        .json({ message: 'User Id is Required', success: false })
     }
 
     const user = await User.findById(id).populate(
       'followers',
       'name username profileImg',
     )
-    if (!user)
-      return res.status(404).json({ Status: 0, Message: 'User not found' })
+    if (!user || user.blockedUsers.includes(req.user._id)) {
+      return res.status(404).json({ message: 'User not found', success: false })
+    }
 
-    return res
-      .status(200)
-      .json({
-        Status: 1,
-        Message: 'Follower Fetched Successfully',
-        Followers: user.followers,
+    if (user.isPrivateAccount && !user.followers.includes(req.user._id)) {
+      return res.status(200).json({
+        message: 'Follower Fetched Successfully',
+        followers: [],
+        success: true,
       })
+    }
+
+    return res.status(200).json({
+      message: 'Follower Fetched Successfully',
+      followers: user.followers,
+      success: true,
+    })
   } catch (error) {
     return res
       .status(500)
-      .json({ Status: 0, Message: 'Error fetching followers', error })
+      .json({ message: 'Internal server error', success: false })
   }
 }
 

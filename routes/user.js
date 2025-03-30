@@ -28,5 +28,10 @@ userRouter.get(
   '/discover/:id',
   require('../controllers/user/discoverPeople.js'),
 )
+userRouter.patch('/', require('../controllers/user/updatePrivacy.js'))
+userRouter.post(
+  '/toggleBlock/:id',
+  require('../controllers/user/blockUnblockUser.js'),
+)
 
 module.exports = userRouter

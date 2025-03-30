@@ -29,6 +29,13 @@ const applyForAJob = async (req, res) => {
       })
     }
 
+    if (job.postedBy.blockedUsers.includes(req.user._id)) {
+      return res.status(400).json({
+        message: 'You cannot apply for this job',
+        success: false,
+      })
+    }
+
     // Add user to applicants list
     job.applicants.push(req.user._id)
     await job.save()
