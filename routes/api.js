@@ -10,6 +10,9 @@ router.use('/users', require('../routes/user'))
 router.use('/comments', require('../routes/comment'))
 router.use('/clerk', require('../routes/clerk'))
 
+// Add file uploads route - make sure it's using the correct path
+router.use('/uploads', require('./uploads'));
+
 // Log registered routes
 console.log('📍 Registered API Routes:')
 router.stack.forEach((r) => {

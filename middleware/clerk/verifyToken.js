@@ -19,10 +19,33 @@ const verifyClerkToken = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log('✅ Token decoded:', decoded);
 
-    // Get user from database
-    const user = await User.findOne({ clerkId: decoded.userId }).select('-password');
+    const userId = decoded.userId;
+    
+    // Get user from database by MongoDB ID
+    let user = await User.findById(userId).select('-password');
+    
+    // If not found by MongoDB ID, try other fallback methods
     if (!user) {
-      console.log('❌ User not found in database for clerkId:', decoded.userId);
+      // Try Clerk ID as fallback (for backwards compatibility)
+      console.log('🔍 User not found by MongoDB ID, trying as Clerk ID:', userId);
+      user = await User.findOne({ clerkId: userId }).select('-password');
+      
+      if (user) {
+        console.log('✅ User found using Clerk ID:', user._id);
+      }
+    }
+    
+    // If still not found, check for an email parameter
+    if (!user && req.query.email) {
+      console.log('🔍 User not found by IDs, trying email:', req.query.email);
+      user = await User.findOne({ email: req.query.email }).select('-password');
+      if (user) {
+        console.log('✅ User found by email:', user.email);
+      }
+    }
+    
+    if (!user) {
+      console.log('❌ User not found in database for ID:', userId);
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -34,7 +57,7 @@ const verifyClerkToken = async (req, res, next) => {
 
     // Attach user to request object
     req.user = user;
-    req.userId = decoded.userId;
+    req.userId = user._id; // Use the MongoDB ID
     
     next();
   } catch (error) {

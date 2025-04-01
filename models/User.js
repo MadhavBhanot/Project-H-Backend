@@ -29,6 +29,14 @@ const UserSchema = new mongoose.Schema(
     profileImg: {
       type: String,
     },
+    authProvider: {
+      type: String,
+      enum: ['email', 'github', 'google'],
+      default: 'email',
+    },
+    lastLogin: {
+      type: Date,
+    },
     bio: {
       type: String,
     },

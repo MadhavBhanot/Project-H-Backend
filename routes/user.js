@@ -7,6 +7,11 @@ const checkObjectID = require('../middleware/main/checkObjectID')
 userRouter.use(verifyClerkToken)
 // userRouter.use(checkObjectID)
 
+// IMPORTANT: Define specific routes BEFORE routes with path parameters
+// Add route for suggested users
+userRouter.get('/suggested', require('../controllers/user/discoverPeople.js'))
+
+// Routes with path parameters
 userRouter.get('/:id', require('../controllers/user/getUserById')) // Get User by Id
 userRouter.delete('/:id', require('../controllers/user/deleteUser')) // Delete User
 userRouter.post(
