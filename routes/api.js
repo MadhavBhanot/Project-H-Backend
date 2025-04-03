@@ -9,6 +9,7 @@ router.use('/jobs', require('../routes/job'))
 router.use('/users', require('../routes/user'))
 router.use('/comments', require('../routes/comment'))
 router.use('/clerk', require('../routes/clerk'))
+router.use('/aws', require('../routes/aws'))
 
 // Add file uploads route - make sure it's using the correct path
 router.use('/uploads', require('./uploads'))
