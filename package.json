@@ -30,6 +30,7 @@
     "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
     "expo-network": "^7.0.5",
+    "expo-server-sdk": "^3.14.0",
     "express": "^4.21.2",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^7.5.0",
