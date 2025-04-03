@@ -1,4 +1,3 @@
-const express = require('express')
 const { Expo } = require('expo-server-sdk')
 const User = require('../../models/User')
 const Notification = require('../../models/Notification')
