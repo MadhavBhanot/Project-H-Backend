@@ -262,7 +262,7 @@ router.post('/chunks/complete', requireAuth, async (req, res) => {
     fs.writeFileSync(filePath, fileBuffer);
     
     // Create file URL
-    const baseUrl = process.env.SERVER_URL || 'http://192.168.1.13:5001';
+    const baseUrl = process.env.SERVER_URL || 'http://192.168.1.5:5001';
     const fileUrl = `${baseUrl}/uploads/${uniqueFileName}`;
     
     // Clean up chunks

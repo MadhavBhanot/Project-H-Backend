@@ -203,6 +203,8 @@ const getExploreFeed = async (req, res) => {
     const pageLimit = parseInt(limit)
     const skip = (parseInt(page) - 1) * pageLimit
 
+    console.log('🔍 Generating explore feed for user:', userId);
+
     const user = await User.findById(userId).lean()
     if (!user) return res.status(404).json({ error: 'User not found' })
 
@@ -211,6 +213,13 @@ const getExploreFeed = async (req, res) => {
     // For new users without much data, we'll need to show trending/recommended content
     const isNewUser = (!user.following || user.following.length === 0) && 
                       (!likedPosts || likedPosts.length === 0);
+    
+    console.log('📊 User profile:', {
+      username: user.username,
+      isNewUser: isNewUser,
+      likedPostsCount: likedPosts?.length || 0,
+      preferencesCount: preferences?.length || 0
+    });
 
     // Get liked post tags
     let likedTags = new Set()
@@ -224,16 +233,23 @@ const getExploreFeed = async (req, res) => {
     }
 
     // Fetch posts based on engagement (likes, category, preferences)
-    let posts = await Post.find({
-      $or: [
-        { tags: { $in: Array.from(likedTags) } },
-        { category: { $in: preferences } },
-      ],
-    })
-      .populate('author', 'username profileImg')
-      .populate('comments')
-      .sort({ likes: -1, comments: -1, createdAt: -1 })
-      .lean()
+    let posts = []
+    
+    // If user has tags or preferences, use them for personalization
+    if (likedTags.size > 0 || (preferences && preferences.length > 0)) {
+      posts = await Post.find({
+        $or: [
+          { tags: { $in: Array.from(likedTags) } },
+          { category: { $in: preferences } },
+        ],
+      })
+        .populate('author', 'username profileImg')
+        .populate('comments')
+        .sort({ likes: -1, comments: -1, createdAt: -1 })
+        .lean()
+      
+      console.log(`✅ Found ${posts.length} personalized posts based on preferences/tags`);
+    }
 
     // Ensure one author does not dominate the feed
     let finalFeed = []
@@ -250,14 +266,60 @@ const getExploreFeed = async (req, res) => {
       if (finalFeed.length >= pageLimit) break
     }
 
-    console.log(`✅ Returning ${finalFeed.length} posts in the feed`);
+    // FALLBACK: If we didn't get enough posts, fetch trending posts with images
+    if (finalFeed.length === 0) {
+      console.log('ℹ️ No personalized posts found, using fallback mechanism');
+      
+      // First try recent posts with images
+      const fallbackPosts = await Post.find({
+        image: { $exists: true, $ne: null, $ne: "" } // Posts with images
+      })
+        .populate('author', 'username profileImg')
+        .populate('comments')
+        .sort({ createdAt: -1 }) // Most recent first
+        .limit(pageLimit)
+        .lean();
+      
+      console.log(`✅ Found ${fallbackPosts.length} fallback posts with images`);
+      
+      // If we still don't have posts, get any posts
+      if (fallbackPosts.length === 0) {
+        const anyPosts = await Post.find({})
+          .populate('author', 'username profileImg')
+          .populate('comments')
+          .sort({ createdAt: -1 })
+          .limit(pageLimit)
+          .lean();
+        
+        console.log(`✅ Found ${anyPosts.length} general posts as final fallback`);
+        finalFeed = anyPosts;
+      } else {
+        finalFeed = fallbackPosts;
+      }
+      
+      // Return feed with fallback flag
+      console.log(`✅ Returning ${finalFeed.length} fallback posts in the feed`);
+      return res.status(200).json({ 
+        feed: finalFeed.slice(0, pageLimit),
+        currentPage: page,
+        meta: {
+          userId: user._id,
+          postCount: finalFeed.length,
+          isNewUser: isNewUser,
+          isFallback: true // Add fallback flag
+        }
+      });
+    }
+
+    console.log(`✅ Returning ${finalFeed.length} personalized posts in the feed`);
     res.status(200).json({ 
       feed: finalFeed.slice(0, pageLimit),
       currentPage: page,
       meta: {
         userId: user._id,
         postCount: finalFeed.length,
-        isNewUser: isNewUser
+        isNewUser: isNewUser,
+        isFallback: false
       }
     });
   } catch (error) {
