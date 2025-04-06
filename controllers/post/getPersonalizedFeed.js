@@ -6,8 +6,8 @@ const User = require('../../models/User')
  */
 const getHomeFeed = async (req, res) => {
   try {
-
-    const { id: userId } = req.params // Get userId from request params
+    // Get userId from request params
+    const { id: userId } = req.params 
     console.log('🔍 Feed requested for MongoDB user ID:', userId);
 
     // Verify MongoDB ID format first
@@ -22,22 +22,13 @@ const getHomeFeed = async (req, res) => {
     // Extract pagination parameters
     const { page = 1, limit = 20 } = req.query
     const pageLimit = parseInt(limit)
-    const skip = (parseInt(page) - 1) * pageLimit
 
     const user = await User.findById(userId).lean()
     if (!user) {
-      console.error('❌ User not found with MongoDB ID:', userId);
-      return res.status(404).json({ 
-        error: 'User not found',
-        details: 'No user exists with the provided MongoDB ID'
-      });
+      return res.status(404).json({ error: 'User not found' })
     }
 
-    console.log('✅ Found user for feed:', {
-      mongoId: user._id,
-      username: user.username,
-      clerkId: user.clerkId
-    });
+    console.log('✅ User found:', user.username)
 
     const { following, preferences, likedPosts } = user
     
@@ -55,14 +46,13 @@ const getHomeFeed = async (req, res) => {
       console.log('ℹ️ New user detected - showing trending content only');
     }
 
-    // Create arrays to store our different post types
-    let preferredPosts = [];
-    let followingPosts = [];
-    let trendingPosts = [];
-    let tagMatchedPosts = [];
+    let preferredPosts = []
+    let followingPosts = []
+    let trendingPosts = []
+    let tagMatchedPosts = []
 
-    // Fetch posts based on user preferences if they have any
-    if (preferences && preferences.length > 0) {
+    // Fetch posts based on user preferences
+    if (preferences?.length) {
       preferredPosts = await Post.find({ category: { $in: preferences } })
         .populate('author', 'username profileImg')
         .populate('comments')
@@ -72,8 +62,8 @@ const getHomeFeed = async (req, res) => {
       console.log(`✅ Found ${preferredPosts.length} posts matching user preferences`);
     }
 
-    // Fetch posts from followed users if they follow anyone
-    if (following && following.length > 0) {
+    // Fetch posts from followed users
+    if (following?.length) {
       followingPosts = await Post.find({ author: { $in: following } })
         .populate('author', 'username profileImg')
         .populate('comments')
@@ -83,7 +73,7 @@ const getHomeFeed = async (req, res) => {
       console.log(`✅ Found ${followingPosts.length} posts from followed users`);
     }
 
-    // Fetch trending posts - always do this as fallback content
+    // Fetch trending posts
     trendingPosts = await Post.find({})
       .populate('author', 'username profileImg')
       .populate('comments')
@@ -92,20 +82,15 @@ const getHomeFeed = async (req, res) => {
       .lean();
     console.log(`✅ Found ${trendingPosts.length} trending posts`);
 
-    // Fetch posts with tags matching liked posts if they've liked posts
-    let likedTags = new Set();
-    if (likedPosts && likedPosts.length > 0) {
-      const likedPostData = await Post.find({ _id: { $in: likedPosts } }).lean();
-      likedPostData.forEach((post) => {
-        if (post.tags && Array.isArray(post.tags)) {
-          post.tags.forEach((tag) => likedTags.add(tag));
-        }
-      });
-      
-      if (likedTags.size > 0) {
-        tagMatchedPosts = await Post.find({
-          tags: { $in: Array.from(likedTags) },
-        })
+    // Fetch posts with matching tags from liked posts
+    if (likedPosts?.length) {
+      const likedPostData = await Post.find({ _id: { $in: likedPosts } }).lean()
+      const likedTags = [
+        ...new Set(likedPostData.flatMap((post) => post.tags || [])),
+      ]
+
+      if (likedTags.length) {
+        tagMatchedPosts = await Post.find({ tags: { $in: likedTags } })
           .populate('author', 'username profileImg')
           .populate('comments')
           .sort({ createdAt: -1 })
@@ -115,39 +100,22 @@ const getHomeFeed = async (req, res) => {
       }
     }
 
-    // Merge all posts and remove duplicates
-    let allPosts = [
+    // Combine and remove duplicate posts
+    const uniquePosts = new Map()
+    ;[
       ...preferredPosts,
       ...followingPosts,
       ...trendingPosts,
       ...tagMatchedPosts,
-    ];
-    
-    console.log('📊 Post collection sizes:', {
-      preferredPosts: preferredPosts.length,
-      followingPosts: followingPosts.length,
-      trendingPosts: trendingPosts.length,
-      tagMatchedPosts: tagMatchedPosts.length,
-      total: allPosts.length
-    });
+    ].forEach((post) => {
+      uniquePosts.set(post._id.toString(), post)
+    })
 
-    // Remove duplicates efficiently
-    let uniquePosts = new Map();
-    allPosts.forEach((post) => uniquePosts.set(post._id.toString(), post));
-    console.log(`✅ After removing duplicates: ${uniquePosts.size} unique posts`);
-
-    // Sort posts based on engagement & recency
-    let sortedPosts = Array.from(uniquePosts.values()).sort((a, b) => {
-      const aScore =
-        (a.likes?.length || 0) * 3 +
-        (a.comments?.length || 0) * 2 +
-        (Date.now() - new Date(a.createdAt).getTime()) / 100000;
-      const bScore =
-        (b.likes?.length || 0) * 3 +
-        (b.comments?.length || 0) * 2 +
-        (Date.now() - new Date(b.createdAt).getTime()) / 100000;
-      return bScore - aScore;
-    });
+    let sortedPosts = [...uniquePosts.values()].sort((a, b) => {
+      const score = (post) =>
+        (post.likes?.length || 0) * 3 + (post.comments?.length || 0) * 2
+      return score(b) - score(a)
+    })
 
     // Avoid consecutive posts from the same author
     let finalFeed = [];
@@ -188,7 +156,7 @@ const getHomeFeed = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error fetching home feed:', error)
+    console.error('❌ Error fetching home feed:', error)
     res.status(500).json({ error: 'Internal server error' })
   }
 }
@@ -201,12 +169,17 @@ const getExploreFeed = async (req, res) => {
     const { id: userId } = req.params
     const { page = 1, limit = 20 } = req.query
     const pageLimit = parseInt(limit)
-    const skip = (parseInt(page) - 1) * pageLimit
 
-    console.log('🔍 Generating explore feed for user:', userId);
+    console.log('🔍 Fetching explore feed for user:', userId)
+
+    if (!userId.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ error: 'Invalid user ID format' })
+    }
 
     const user = await User.findById(userId).lean()
-    if (!user) return res.status(404).json({ error: 'User not found' })
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' })
+    }
 
     const { likedPosts, preferences } = user
 
@@ -251,18 +224,20 @@ const getExploreFeed = async (req, res) => {
       console.log(`✅ Found ${posts.length} personalized posts based on preferences/tags`);
     }
 
-    // Ensure one author does not dominate the feed
     let finalFeed = []
     let authorLastPost = new Map()
 
     for (let post of posts) {
+      if (!post.author?._id) continue
+
       if (
-        !authorLastPost.has(post.author._id) ||
-        finalFeed.length - authorLastPost.get(post.author._id) > 3
+        !authorLastPost.has(post.author._id.toString()) ||
+        finalFeed.length - authorLastPost.get(post.author._id.toString()) > 3
       ) {
         finalFeed.push(post)
         authorLastPost.set(post.author._id, finalFeed.length)
       }
+
       if (finalFeed.length >= pageLimit) break
     }
 
