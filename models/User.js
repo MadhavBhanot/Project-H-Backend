@@ -134,6 +134,28 @@ const UserSchema = new mongoose.Schema(
         ref: 'User',
       },
     ],
+    pushNotificationToken: {
+      type: String,
+      default: null,
+    },
+    notifications: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Notification',
+      },
+    ],
+    isNotificationsBlocked: {
+      type: Boolean,
+      default: false,
+    },
+    isNotificationsMuted: {
+      type: Boolean,
+      default: false,
+      duration: {
+        type: Date,
+        default: null,
+      },
+    },
   },
   { timestamps: true }, // Automatically adds createdAt & updatedAt fields
 )
