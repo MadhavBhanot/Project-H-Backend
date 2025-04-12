@@ -25,7 +25,7 @@ postRouter.get(
 postRouter.delete('/:id', checkObjectID, deletePost) // Delete a post with objectID validation
 
 // Post creation
-postRouter.post('/create', upload.single('image'), createPost) // Create a new post
+postRouter.post('/create', createPost) // Create a new post
 
 // Post interactions
 postRouter.post('/like/:id', require('../controllers/post/likeOrUnlikePost.js')) // Like or unlike a post

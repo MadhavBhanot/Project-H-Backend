@@ -1,77 +1,78 @@
-const Post = require('../../models/Post');
-const User = require('../../models/User');
-const mongoose = require('mongoose');
+const Post = require('../../models/Post')
+const User = require('../../models/User')
+const mongoose = require('mongoose')
 
 const getUserPosts = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const { email } = req.query;
-    console.log('🔍 Fetching posts request with params:', { userId, email });
+    const { userId } = req.params
+    const { email } = req.query
+    const { type } = req.query
+    console.log('🔍 Fetching posts request with params:', { userId, email })
 
     // First try to find user by MongoDB ID (userId parameter)
-    let user = null;
-    
+    let user = null
+
     if (userId && mongoose.Types.ObjectId.isValid(userId)) {
-      console.log('🔍 Looking up user by MongoDB ID:', userId);
-      user = await User.findById(userId);
+      console.log('🔍 Looking up user by MongoDB ID:', userId)
+      user = await User.findById(userId)
       if (user) {
         console.log('✅ Found user by MongoDB ID:', {
           _id: user._id.toString(),
           username: user.username,
-          clerkId: user.clerkId
-        });
+          clerkId: user.clerkId,
+        })
       } else {
-        console.log('❌ User not found by MongoDB ID:', userId);
+        console.log('❌ User not found by MongoDB ID:', userId)
       }
     }
-    
+
     // If not found by ID and email is provided, try to find by email
     if (!user && email) {
-      console.log('🔍 Looking up user by email:', email);
-      user = await User.findOne({ email });
+      console.log('🔍 Looking up user by email:', email)
+      user = await User.findOne({ email })
       if (user) {
         console.log('✅ Found user by email:', {
           _id: user._id.toString(),
           username: user.username,
-          email: user.email
-        });
+          email: user.email,
+        })
       } else {
-        console.log('❌ User not found by email:', email);
+        console.log('❌ User not found by email:', email)
       }
     }
-    
+
     // If still not found, look for a user by Clerk ID
     if (!user && userId && !mongoose.Types.ObjectId.isValid(userId)) {
-      console.log('🔍 Looking up user by Clerk ID:', userId);
-      user = await User.findOne({ clerkId: userId });
+      console.log('🔍 Looking up user by Clerk ID:', userId)
+      user = await User.findOne({ clerkId: userId })
       if (user) {
         console.log('✅ Found user by Clerk ID:', {
           _id: user._id.toString(),
           username: user.username,
-          clerkId: user.clerkId
-        });
+          clerkId: user.clerkId,
+        })
       } else {
-        console.log('❌ User not found by Clerk ID:', userId);
+        console.log('❌ User not found by Clerk ID:', userId)
       }
     }
-    
+
     // As a last resort, try to use the authenticated user from the request
     if (!user && req.user) {
-      console.log('🔍 Using authenticated user from request');
-      user = req.user;
+      console.log('🔍 Using authenticated user from request')
+      user = req.user
       console.log('✅ Using authenticated user:', {
         _id: user._id.toString(),
-        username: user.username
-      });
+        username: user.username,
+      })
     }
-    
+
     // If no user found by any method, return error
     if (!user) {
-      console.log('❌ User not found by any lookup method');
+      console.log('❌ User not found by any lookup method')
       return res.status(404).json({
         success: false,
-        message: 'User not found'
-      });
+        message: 'User not found',
+      })
     }
 
     // Log user details one more time to ensure we're fetching for the right user
@@ -79,71 +80,86 @@ const getUserPosts = async (req, res) => {
       _id: user._id.toString(),
       username: user.username,
       clerkId: user.clerkId,
-      email: user.email
-    });
+      email: user.email,
+    })
+
+    // Create a filter to fetch the posts
+    const filter = {
+      author: user._id,
+    }
+    filter.type = type // Add the type to the filter if provided
 
     // Find all posts by this exact user
-    const posts = await Post.find({ author: user._id })
+    const posts = await Post.find(filter) // If type is not provided, it will fetch all the posts otherwise it will fetch the posts of that type
       .populate({
         path: 'author',
-        select: '_id username profileImg'
+        select: '_id username profileImg',
       })
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
 
-    console.log(`✅ Found ${posts.length} posts for user:`, user._id);
-    
+    console.log(`✅ Found ${posts.length} posts for user:`, user._id)
+
     // Double-check that all posts belong to this user
-    const validPosts = posts.filter(post => {
+    const validPosts = posts.filter((post) => {
       if (!post.author || !post.author._id) {
-        console.warn('⚠️ Post has no author:', post._id);
-        return false;
+        console.warn('⚠️ Post has no author:', post._id)
+        return false
       }
-      
-      const postAuthorId = post.author._id.toString();
-      const requestedUserId = user._id.toString();
-      
+
+      const postAuthorId = post.author._id.toString()
+      const requestedUserId = user._id.toString()
+
       if (postAuthorId !== requestedUserId) {
         console.error('🚨 Post author mismatch:', {
           postId: post._id.toString(),
           postAuthorId,
-          requestedUserId
-        });
-        return false;
+          requestedUserId,
+        })
+        return false
       }
-      
-      return true;
-    });
-    
+
+      return true
+    })
+
     if (validPosts.length !== posts.length) {
-      console.warn(`⚠️ Filtered out ${posts.length - validPosts.length} posts with incorrect author`);
+      console.warn(
+        `⚠️ Filtered out ${
+          posts.length - validPosts.length
+        } posts with incorrect author`,
+      )
     }
 
     // Return empty array if no posts found
     if (!validPosts || validPosts.length === 0) {
-      console.log('ℹ️ No valid posts found for user:', user._id);
+      console.log('ℹ️ No valid posts found for user:', user._id)
       return res.status(200).json({
         success: true,
         message: 'No posts found',
-        posts: []
-      });
+        posts: [],
+      })
     }
 
     // Transform posts to include author details
-    const transformedPosts = validPosts.map(post => ({
+    const transformedPosts = validPosts.map((post) => ({
       _id: post._id,
       content: post.content,
       image: post.image,
       createdAt: post.createdAt,
       likes: post.likes || [],
       comments: post.comments || [],
-      author: post.author ? {
-        _id: post.author._id,
-        username: post.author.username,
-        imageUrl: post.author.profileImg || ''
-      } : null
-    }));
+      author: post.author
+        ? {
+            _id: post.author._id,
+            username: post.author.username,
+            imageUrl: post.author.profileImg || '',
+          }
+        : null,
+    }))
 
-    console.log(`✅ Returning ${transformedPosts.length} posts for user:`, user._id);
+    console.log(
+      `✅ Returning ${transformedPosts.length} posts for user:`,
+      user._id,
+    )
 
     return res.status(200).json({
       success: true,
@@ -152,18 +168,17 @@ const getUserPosts = async (req, res) => {
       user: {
         _id: user._id,
         username: user.username,
-        email: user.email
-      }
-    });
-
+        email: user.email,
+      },
+    })
   } catch (error) {
-    console.error('❌ Error in getUserPosts:', error);
+    console.error('❌ Error in getUserPosts:', error)
     return res.status(500).json({
       success: false,
       message: 'Error fetching user posts',
-      error: error.message
-    });
+      error: error.message,
+    })
   }
-};
+}
 
-module.exports = getUserPosts; 
+module.exports = getUserPosts
