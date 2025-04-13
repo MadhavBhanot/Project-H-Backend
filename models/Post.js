@@ -81,10 +81,12 @@ const PostSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    viewCount: {
-      type: Number,
-      default: 0,
-    },
+    viewedBy: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   {
     timestamps: true,
