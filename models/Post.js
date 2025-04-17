@@ -2,9 +2,17 @@ const mongoose = require('mongoose')
 
 const PostSchema = new mongoose.Schema(
   {
-    image: {
-      type: String, // No 'required' constraint, optional field
+    type: {
+      type: String,
+      enum: ['post', 'reel'],
+      default: 'post',
+      required: true,
     },
+    image: [
+      {
+        type: String, // No 'required' constraint, optional field
+      },
+    ],
     caption: {
       type: String,
       required: true,
@@ -13,7 +21,7 @@ const PostSchema = new mongoose.Schema(
     likes: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: 'User',
-      default: []  // Initialize as empty array
+      default: [], // Initialize as empty array
     },
     comments: [
       {
@@ -51,14 +59,14 @@ const PostSchema = new mongoose.Schema(
       ],
       default: 'Technology',
       required: true,
-      set: function(v) {
+      set: function (v) {
         // Handle array input
         if (Array.isArray(v)) {
-          return v.length > 0 ? v[0].toString() : 'Technology';
+          return v.length > 0 ? v[0].toString() : 'Technology'
         }
         // Handle string input
-        return v ? v.toString() : 'Technology';
-      }
+        return v ? v.toString() : 'Technology'
+      },
     },
     tags: [
       {
@@ -69,6 +77,16 @@ const PostSchema = new mongoose.Schema(
     location: {
       type: String,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    viewedBy: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   {
     timestamps: true,

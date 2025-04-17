@@ -20,7 +20,7 @@ const getPresignedUrl = async (req, res) => {
     // Generate pre-signed URL
     const signedUrl = await s3.getSignedUrlPromise('putObject', params)
 
-    return res.json({
+    return res.status(200).json({
       success: true,
       uploadUrl: signedUrl,
       fileUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`,

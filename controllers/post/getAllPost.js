@@ -4,7 +4,13 @@ const Post = require('../../models/Post') // Adjust the path as needed
 const getPosts = async (req, res) => {
   try {
     // Retrieve all posts and populate user data
-    const posts = await Post.find().populate('user', 'username email')
+    const { type } = req.query
+    const filter = {}
+    if (type) {
+      filter.type = type
+    }
+    // Fetch posts from the database
+    const posts = await Post.find(filter).populate('user', 'username email')
 
     // Check if posts exist
     if (!posts || posts.length === 0) {

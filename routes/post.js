@@ -10,6 +10,7 @@ const {
   getHomeFeed,
   getExploreFeed,
 } = require('../controllers/post/getPersonalizedFeed.js')
+const updateView = require('../controllers/post/updateView.js')
 
 postRouter.use(verifyClerkToken)
 
@@ -25,7 +26,7 @@ postRouter.get(
 postRouter.delete('/:id', checkObjectID, deletePost) // Delete a post with objectID validation
 
 // Post creation
-postRouter.post('/create', upload.single('image'), createPost) // Create a new post
+postRouter.post('/create', createPost) // Create a new post
 
 // Post interactions
 postRouter.post('/like/:id', require('../controllers/post/likeOrUnlikePost.js')) // Like or unlike a post
@@ -36,6 +37,7 @@ postRouter.post('/comment/:id', require('../controllers/post/addComment.js')) //
 
 // Post management
 postRouter.patch('/update/:id', require('../controllers/post/updatePost.js')) // Update a post
+postRouter.patch('/view/:id', updateView)
 
 postRouter.get('/feed/home/:id', getHomeFeed)
 postRouter.get('/feed/explore/:id', getExploreFeed)
