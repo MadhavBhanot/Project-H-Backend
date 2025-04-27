@@ -9,10 +9,14 @@ const jwt = require('jsonwebtoken')
  */
 const generateToken = (res, userId) => {
   try {
+    // Get the secret key - Important to use the same one used in verification
+    const jwtSecret = process.env.JWT_SECRET
+    console.log('🔐 Using secret for token generation:', jwtSecret.substring(0, 5) + '...')
+    
     // Generate the JWT token
     const jwtToken = jwt.sign(
       { userId }, // Payload with the user ID
-      process.env.JWT_SECRET_KEY, // Use JWT_SECRET to match the socket verification
+      jwtSecret,  // Using the explicitly defined JWT_SECRET
       { expiresIn: '100h' }, // Token expiration time
     )
 

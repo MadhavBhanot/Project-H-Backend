@@ -17,11 +17,31 @@ const verifyClerkToken = async (req, res, next) => {
     const token = authHeader.split(' ')[1]
     console.log('🔑 Processing token:', token.substring(0, 20) + '...')
 
-    // Verify the token using the same secret as login
-    console.log('SECRET KEY', process.env.JWT_SECRET_KEY)
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
-    console.log('✅ Token decoded:', decoded)
+    let decoded = null
+    let jwtSecret = null
 
+    // Try both JWT_SECRET and JWT_SECRET_KEY for maximum compatibility
+    try {
+      jwtSecret = process.env.JWT_SECRET
+      console.log('🔐 First trying JWT_SECRET:', jwtSecret.substring(0, 5) + '...')
+      decoded = jwt.verify(token, jwtSecret)
+      console.log('✅ Token verified with JWT_SECRET')
+    } catch (firstError) {
+      console.log('⚠️ JWT_SECRET verification failed:', firstError.message)
+      
+      try {
+        jwtSecret = process.env.JWT_SECRET_KEY
+        console.log('🔐 Now trying JWT_SECRET_KEY:', jwtSecret.substring(0, 5) + '...')
+        decoded = jwt.verify(token, jwtSecret)
+        console.log('✅ Token verified with JWT_SECRET_KEY')
+      } catch (secondError) {
+        console.log('❌ JWT_SECRET_KEY verification also failed:', secondError.message)
+        throw secondError // Rethrow the error to be caught by the outer catch block
+      }
+    }
+
+    console.log('✅ Token decoded successfully:', decoded)
+    
     const userId = decoded.userId
 
     // Get user from database by MongoDB ID
